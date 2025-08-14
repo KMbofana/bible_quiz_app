@@ -11,9 +11,13 @@ declare module 'vue' {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     ClozeQuestions: typeof import('./src/components/ClozeQuestions.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    Login: typeof import('./src/components/Login.vue')['default']
+    LoginToQuiz: typeof import('./src/components/LoginToQuiz.vue')['default']
     QuizQuestion: typeof import('./src/components/QuizQuestion.vue')['default']
     QuizResults: typeof import('./src/components/QuizResults.vue')['default']
+    RegisterAccount: typeof import('./src/components/RegisterAccount.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StudentPortal: typeof import('./src/components/StudentPortal.vue')['default']
   }
 }
