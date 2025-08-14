@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
+    ClozeQuestions: typeof import('./src/components/ClozeQuestions.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     QuizQuestion: typeof import('./src/components/QuizQuestion.vue')['default']
     QuizResults: typeof import('./src/components/QuizResults.vue')['default']
