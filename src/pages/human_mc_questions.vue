@@ -92,6 +92,7 @@ import QuizQuestion from '../components/QuizQuestion.vue'
 import QuizResults from '../components/QuizResults.vue'
 import { useQuizStore } from '@/stores/quizLevel'
 import axios from 'axios'
+import { prod } from 'api'
 
 const quizStore = useQuizStore()
 const data = ref([])
@@ -99,7 +100,7 @@ const data = ref([])
 onMounted(async () => {
 
   try {
-    const result = await axios.get('http://localhost:3001/api/questions/student_view_cloze_questions', {
+    const result = await axios.get(`${prod}questions/student_view_cloze_questions`, {
       params: {
         quizLevel: quizStore.quizLevel,
         levelName: quizStore.name,

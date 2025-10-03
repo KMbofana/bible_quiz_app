@@ -48,6 +48,7 @@ import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from "jwt-decode";
+import { prod, dev } from 'api';
 
 
     const email = ref('')
@@ -68,7 +69,7 @@ import { jwtDecode } from "jwt-decode";
         }
 
         try {
-          axios.post('http://127.0.0.1:3001/api/login',data )
+          axios.post(`${prod}login`,data )
           .then((result) => {
             console.log(result)
             toast.success(result.data.message, {
@@ -79,7 +80,7 @@ import { jwtDecode } from "jwt-decode";
                 if(decoded.role ==="user"){
                     route.push('/student_portal')
                 }else{
-                    route.push('/admin')
+                    route.push('/create_mc_questions')
                 }
             
           }).catch((err) => {

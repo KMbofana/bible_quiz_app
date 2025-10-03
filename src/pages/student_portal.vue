@@ -45,6 +45,7 @@
 <script setup>
 import {useQuizStore} from "../stores/quizLevel"
 import axios from "axios"
+import { prod, dev } from "api"
 
 const quizStore = useQuizStore()
     const handleQuizLevel = (level)=>{
@@ -52,7 +53,7 @@ const quizStore = useQuizStore()
         console.log(level)
         quizStore.setQuizLevel(level)
         quizStore.setLevelName(levelName)
-        axios.get(`http://localhost:3001/api/questions/student_view_mc_questions`,
+        axios.get(`${prod}questions/student_view_mc_questions`,
             {
                  params: {
                     quizLevel:level,

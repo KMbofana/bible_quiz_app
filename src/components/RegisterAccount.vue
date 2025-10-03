@@ -110,6 +110,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
+import {dev, prod} from "api"
 
 const toast = useToast()
 const route = useRouter()
@@ -138,7 +139,7 @@ const loading = ref(false)
         }
         try {
 
-            axios.post('http://127.0.0.1:3001/api/user_registration', data)
+            axios.post(`${prod}user_registration`, data)
             .then((result) => {
                 console.log(result)
                 toast.success(result.data.message, {

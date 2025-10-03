@@ -143,6 +143,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { prod } from 'api';
 
 const question = ref('')
 const type = ref('')
@@ -209,7 +210,7 @@ const resetInputs = () => {
 
 const submitAllQuestions = async () => {
   try {
-    await axios.post('http://localhost:3001/api/questions/bulk', questionSet.value)
+    await axios.post(`${prod}questions/bulk`, questionSet.value)
     questionSet.value = [] // clear after successful submit
   } catch (error) {
     console.error(error)
