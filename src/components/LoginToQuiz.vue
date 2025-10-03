@@ -37,6 +37,7 @@
                 size="large"
             >Login</v-btn>
             <div v-if="error" class="error">{{ error }}</div>
+            <a class="link" href="/registration">Register Account</a>
         <!-- </form> -->
     </div>
    </v-container>
@@ -48,7 +49,7 @@ import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from "jwt-decode";
-import { prod, dev } from 'api';
+import { prod, dev } from '../../api';
 
 
     const email = ref('')
@@ -114,5 +115,8 @@ import { prod, dev } from 'api';
 .error {
     color: red;
     margin-top: 1rem;
+}
+.link{
+    text-decoration: none;
 }
 </style>

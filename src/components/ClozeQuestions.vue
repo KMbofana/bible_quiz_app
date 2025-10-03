@@ -97,7 +97,7 @@
 import { ref, computed,onMounted } from 'vue'
 import { useQuizStore } from '@/stores/quizLevel'
 import axios from 'axios'
-import { prod, dev } from 'api'
+import { prod, dev } from '../../api';
 
 const quizStore = useQuizStore()
 const questions = ref([])

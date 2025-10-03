@@ -143,7 +143,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { prod } from 'api';
+import { prod, dev } from '../../api';
 
 const question = ref('')
 const type = ref('')

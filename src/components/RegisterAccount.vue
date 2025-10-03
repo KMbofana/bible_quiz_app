@@ -110,7 +110,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
-import {dev, prod} from "api"
+import { prod, dev } from '../../api';
 
 const toast = useToast()
 const route = useRouter()
