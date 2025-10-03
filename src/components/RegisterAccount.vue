@@ -9,6 +9,45 @@
             >
             <v-text-field
             hide-details="auto"
+            label="First Name"
+            placeholder="john"
+            type="input"
+            v-model="firstname"
+            required
+            ></v-text-field>
+        </v-responsive>
+            <v-responsive
+                class=""
+                max-width="344"
+            >
+            <v-text-field
+            hide-details="auto"
+            label="Last Name"
+            placeholder="Doe"
+            type="input"
+            v-model="lastname"
+            required
+            ></v-text-field>
+        </v-responsive>
+            <v-responsive
+                class=""
+                max-width="344"
+            >
+            <v-text-field
+            hide-details="auto"
+            label="phone"
+            placeholder="0775467378"
+            type="number"
+            v-model="phone"
+            required
+            ></v-text-field>
+        </v-responsive>
+            <v-responsive
+                class=""
+                max-width="344"
+            >
+            <v-text-field
+            hide-details="auto"
             label="Email address"
             placeholder="johndoe@gmail.com"
             type="email"
@@ -16,6 +55,30 @@
             required
             ></v-text-field>
         </v-responsive>
+            <v-responsive
+                class=""
+                max-width="344"
+            >
+            <v-select
+                label="District"
+                :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+                v-model="district"
+                required
+                ></v-select>
+           
+        </v-responsive>
+            <v-responsive
+                class=""
+                max-width="344"
+            >
+            <v-select
+                label="Role"
+                :items="['user', 'admin']"
+                v-model="role"
+                required
+                ></v-select>
+        </v-responsive>
+           
         <!-- <br /> -->
         <v-responsive
             class=""
@@ -24,14 +87,14 @@
             <v-text-field
                 hint="Enter your password to access this website"
                 label="Password"
-                type="input"
+                type="password"
                 v-model="password"
                 required
                 ></v-text-field>
             </v-responsive>
             <v-btn 
                 :disabled="loading"
-                color="primary"
+                color="rgb(154, 63, 63)"
                 variant="flat"
                 @click="register"
                 size="large"
@@ -42,37 +105,58 @@
    </v-container>
 </template>
 
-<script>
+<script setup>
+import axios from 'axios'
 import { ref } from 'vue'
+import { useToast } from "vue-toastification";
+import { useRouter } from 'vue-router';
 
-// Import Firebase SDK (make sure you have initialized Firebase elsewhere)
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+const toast = useToast()
+const route = useRouter()
 
-export default {
-    name: 'RegisterAccount',
-    setup() {
-        const email = ref('')
-        const password = ref('')
-        const error = ref('')
-        const loading = ref(false)
+const firstname = ref('')
+const lastname = ref('')
+const phone = ref('')
+const district = ref('')
+const email = ref('')
+const role = ref('')
+const password = ref('')
+const error = ref('')
+const loading = ref(false)
 
-        const register = async () => {
-            error.value = ''
-            loading.value = true
-            try {
-                const auth = getAuth()
-                await createUserWithEmailAndPassword(auth, email.value, password.value)
-                // Registration successful, redirect or show success message
-            } catch (err) {
-                error.value = err.message
-            } finally {
-                loading.value = false
-            }
+    const register = async () => {
+        error.value = ''
+        loading.value = true
+        const data = {
+            firstname:firstname.value,
+            lastname:lastname.value,
+            phone:phone.value,
+            district:district.value,
+            email:email.value,
+            role:role.value,
+            password:password.value
         }
+        try {
 
-        return { email, password, error, loading, register }
+            axios.post('http://127.0.0.1:3001/api/user_registration', data)
+            .then((result) => {
+                console.log(result)
+                toast.success(result.data.message, {
+        timeout: 2000
+      })
+      route.push('/')
+            }).catch((err) => {
+                console.log(err)
+                toast.error(err.response.data.message, {
+        timeout: 2000
+      })
+            });
+        } catch (err) {
+            error.value = err.message
+        } finally {
+            loading.value = false
+        }
     }
-}
 </script>
 
 <style scoped>

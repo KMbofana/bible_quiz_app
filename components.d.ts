@@ -8,8 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AdminNavigation: typeof import('./src/components/AdminNavigation.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     ClozeQuestions: typeof import('./src/components/ClozeQuestions.vue')['default']
+    CreateClozeQ: typeof import('./src/components/CreateClozeQ.vue')['default']
+    CreateMCQuestions: typeof import('./src/components/CreateMCQuestions.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Login: typeof import('./src/components/Login.vue')['default']
     LoginToQuiz: typeof import('./src/components/LoginToQuiz.vue')['default']
@@ -18,6 +21,7 @@ declare module 'vue' {
     RegisterAccount: typeof import('./src/components/RegisterAccount.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StudentNavigation: typeof import('./src/components/StudentNavigation.vue')['default']
     StudentPortal: typeof import('./src/components/StudentPortal.vue')['default']
   }
 }

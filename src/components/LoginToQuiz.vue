@@ -33,7 +33,7 @@
                 :disabled="loading"
                 color="primary"
                 variant="flat"
-                @click="register"
+                @click="login"
                 size="large"
             >Login</v-btn>
             <div v-if="error" class="error">{{ error }}</div>
@@ -42,37 +42,61 @@
    </v-container>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
+import axios from 'axios'
+import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
+import { jwtDecode } from "jwt-decode";
 
-// Import Firebase SDK (make sure you have initialized Firebase elsewhere)
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
-export default {
-    name: 'LoginToQuiz',
-    setup() {
-        const email = ref('')
-        const password = ref('')
-        const error = ref('')
-        const loading = ref(false)
+    const email = ref('')
+    const password = ref('')
+    const error = ref('')
+    const loading = ref(false)
 
-        const register = async () => {
-            error.value = ''
-            loading.value = true
-            try {
-                const auth = getAuth()
-                await createUserWithEmailAndPassword(auth, email.value, password.value)
-                // Registration successful, redirect or show success message
-            } catch (err) {
-                error.value = err.message
-            } finally {
-                loading.value = false
-            }
+    const toast = useToast();
+    const route = useRouter()
+
+    const login = async () => {
+        error.value = ''
+        loading.value = true
+
+        const data = {
+            email:email.value,
+            password:password.value
         }
 
-        return { email, password, error, loading, register }
+        try {
+          axios.post('http://127.0.0.1:3001/api/login',data )
+          .then((result) => {
+            console.log(result)
+            toast.success(result.data.message, {
+                timeout:5000
+            })
+            const decoded = jwtDecode(result.data.token)
+                console.log(decoded.role)
+                if(decoded.role ==="user"){
+                    route.push('/student_portal')
+                }else{
+                    route.push('/admin')
+                }
+            
+          }).catch((err) => {
+            console.log(error)
+            toast.error(err.response.data.message, {
+                timeout:3000
+            })
+          });
+        } catch (err) {
+            error.value = err.message
+        } finally {
+            loading.value = false
+        }
     }
-}
+
+    
+    
 </script>
 
 <style scoped>

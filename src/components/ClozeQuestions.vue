@@ -20,7 +20,7 @@
         </v-row>
 
         <!-- Question Text -->
-        <h3 class="text-h6 mb-2">{{ currentQuestion.text }}</h3>
+        <h3 class="text-h6 mb-2">{{ currentQuestion.question }}</h3>
         <p v-if="currentQuestion.verse" class="text-caption font-italic text-grey">
           Reference: {{ currentQuestion.verse }}
         </p>
@@ -51,7 +51,7 @@
         <v-row class="mt-4">
           <v-col cols="12" class="text-center">
             <v-btn
-              color="primary"
+              color="rgb(154, 63, 63)"
               @click="handleNext"
               :disabled="!showResult"
             >
@@ -80,7 +80,7 @@
         <div class="text-subtitle-1">{{ getScoreMessage() }}</div>
 
         <v-btn
-          color="primary"
+          color="rgb(154, 63, 63)"
           variant="flat"
           size="large"
           class="mt-4"
@@ -94,13 +94,35 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed,onMounted } from 'vue'
+import { useQuizStore } from '@/stores/quizLevel'
+import axios from 'axios'
 
-const questions = [
-  { id: 1, text: 'For God so loved the world that He gave His only _____ Son.', answer: 'begotten', verse: 'John 3:16' },
-  { id: 2, text: 'Jesus turned water into _____ at the wedding in Cana.', answer: 'wine', verse: 'John 2:9' },
-  { id: 3, text: 'The fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness, _____, self-control.', answer: 'gentleness', verse: 'Galatians 5:22-23' }
-]
+const quizStore = useQuizStore()
+const questions = ref([])
+
+
+onMounted(async () => {
+
+  try {
+    const result = await axios.get('http://localhost:3001/api/questions/student_view_cloze_questions', {
+      params: {
+        quizLevel: quizStore.quizLevel,
+        levelName: quizStore.name,
+      },
+    })
+    questions.value = result.data.questions[0].questions
+    console.log('Data loaded:', result.data.questions[0].questions[0])
+  } catch (error) {
+    console.error('Failed to load:', error)
+  }
+})
+
+// const questions = [
+//   { id: 1, text: 'For God so loved the world that He gave His only _____ Son.', answer: 'begotten', verse: 'John 3:16' },
+//   { id: 2, text: 'Jesus turned water into _____ at the wedding in Cana.', answer: 'wine', verse: 'John 2:9' },
+//   { id: 3, text: 'The fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faithfulness, _____, self-control.', answer: 'gentleness', verse: 'Galatians 5:22-23' }
+// ]
 
 const currentQuestionIndex = ref(0)
 const userAnswer = ref('')
@@ -109,10 +131,11 @@ const showResult = ref(false)
 const quizCompleted = ref(false)
 const score = ref(0)
 
-const currentQuestion = computed(() => questions[currentQuestionIndex.value])
-const isLastQuestion = computed(() => currentQuestionIndex.value === questions.length - 1)
+const currentQuestion = computed(() => questions.value[currentQuestionIndex.value] || {})
+// const currentQuestion = { id: 1, text: 'For God so loved the world that He gave His only _____ Son.', answer: 'begotten', verse: 'John 3:16' }
+const isLastQuestion = computed(() => currentQuestionIndex.value === questions.value.length - 1)
 const isCorrect = computed(() => userAnswer.value.trim().toLowerCase() === currentQuestion.value.answer.toLowerCase())
-const percentage = computed(() => Math.round((score.value / questions.length) * 100))
+const percentage = computed(() => Math.round((score.value / questions.value.length) * 100))
 
 const submitAnswer = () => {
   if (!showResult.value) {

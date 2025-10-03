@@ -23,7 +23,7 @@
 
       <v-card-actions class="justify-center">
         <v-btn
-          color="primary"
+          color="rgb(154, 63, 63)"
           variant="flat"
           @click="$emit('restart')"
           size="large"

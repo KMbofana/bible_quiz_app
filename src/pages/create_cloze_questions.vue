@@ -1,0 +1,3 @@
+<template>
+    <CreateClozeQ/>
+</template>
