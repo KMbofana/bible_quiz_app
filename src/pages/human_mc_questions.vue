@@ -100,7 +100,7 @@ const data = ref([])
 onMounted(async () => {
 
   try {
-    const result = await axios.get(`${prod}questions/student_view_cloze_questions`, {
+    const result = await axios.get(`${prod}questions/student_view_mc_questions`, {
       params: {
         quizLevel: quizStore.quizLevel,
         levelName: quizStore.name,

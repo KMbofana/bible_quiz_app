@@ -30,11 +30,12 @@
                 ></v-text-field>
             </v-responsive>
             <v-btn 
-                :disabled="loading"
+                
                 color="primary"
                 variant="flat"
                 @click="login"
                 size="large"
+                :loading="loading"
             >Login</v-btn>
             <div v-if="error" class="error">{{ error }}</div>
             <a class="link" href="/registration">Register Account</a>
@@ -63,7 +64,7 @@ import { prod, dev } from '../../api';
     const login = async () => {
         error.value = ''
         loading.value = true
-
+       console.log(loading.value)
         const data = {
             email:email.value,
             password:password.value
@@ -79,8 +80,10 @@ import { prod, dev } from '../../api';
             const decoded = jwtDecode(result.data.token)
                 console.log(decoded.role)
                 if(decoded.role ==="user"){
+                  
                     route.push('/student_portal')
                 }else{
+                  
                     route.push('/create_mc_questions')
                 }
             

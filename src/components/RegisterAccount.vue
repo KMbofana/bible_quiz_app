@@ -98,6 +98,7 @@
                 variant="flat"
                 @click="register"
                 size="large"
+                :loading="loading"
             >Register</v-btn>
             <div v-if="error" class="error">{{ error }}</div>
         <!-- </form> -->
@@ -111,6 +112,7 @@ import { ref } from 'vue'
 import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
 import { prod, dev } from '../../api';
+
 
 const toast = useToast()
 const route = useRouter()
