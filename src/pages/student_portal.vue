@@ -45,7 +45,7 @@
 <script setup>
 import {useQuizStore} from "../stores/quizLevel"
 import axios from "axios"
-import { prod, dev } from '../../api';
+import { prod } from '../../api';
 
 const quizStore = useQuizStore()
     const handleQuizLevel = (level)=>{

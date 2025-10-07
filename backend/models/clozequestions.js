@@ -3,9 +3,10 @@ const {Schema} = mongoose;
 
 const clozequestionSchema = new Schema({
     question:{type:String, required:true},
-    answer:{type:String, required:true},
+    answer:{type:String, required:false},
     reference:{type:String, required:true},
-    correctAnswer:{type:Number, required:true}
+    correctAnswer:{type:String, required:true},
+    type:{type:String, required:false}
 })
 
 const ClozeQuestionSetSchema = new Schema({

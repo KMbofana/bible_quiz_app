@@ -50,7 +50,7 @@ import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from "jwt-decode";
-import { prod, dev } from '../../api';
+import { prod } from '../../api';
 
 
     const email = ref('')

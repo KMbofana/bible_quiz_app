@@ -4,11 +4,11 @@ const mcquestions = require('../models/mcquestions');
 const saveClozeQuestions = async (req, res) => {    
    
    const {quizLevel,levelName, questions} = req.body;
-    console.log(JSON.parse(questions))
+    console.log(questions)
    await clozequestions.create({
     quizLevel,
     levelName,
-    questions:JSON.parse(questions)
+    questions:questions
    })
    .then((result) => {
     res.status(201).json({message:'cloze questions created successfully🎉'})
@@ -26,7 +26,7 @@ const saveMCQuestions = async (req, res) => {
    await mcquestions.create({
     quizLevel,
     levelName,
-    questions:JSON.parse(questions)
+    questions
    })
    .then((result) => {
     res.status(201).json({message:'multiple choice questions save successfully🎉'})

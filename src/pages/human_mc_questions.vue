@@ -92,7 +92,7 @@ import QuizQuestion from '../components/QuizQuestion.vue'
 import QuizResults from '../components/QuizResults.vue'
 import { useQuizStore } from '@/stores/quizLevel'
 import axios from 'axios'
-import { prod, dev } from '../../api';
+import { prod } from '../../api';
 
 const quizStore = useQuizStore()
 const data = ref([])
