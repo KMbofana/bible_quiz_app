@@ -11,6 +11,11 @@
                                 <v-list-item-title >Create Question</v-list-item-title>
                             </v-list-item>
                         </RouterLink>
+                        <RouterLink class="redirectLink" to="/admin_add_unit">
+                            <v-list-item >
+                                <v-list-item-title >Add Organizations Units</v-list-item-title>
+                            </v-list-item>
+                        </RouterLink>
                         <RouterLink class="redirectLink" to="/">
                             <v-list-item >
                                 <v-list-item-title>Profile</v-list-item-title>
