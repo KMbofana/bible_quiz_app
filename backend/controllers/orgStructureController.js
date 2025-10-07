@@ -2,15 +2,46 @@ const orgUnitStructure = require('../models/orgstructure');
 
 const buildOrgTree = require("../utils/helperBuildOrgTree");
 
-const addUnits = async (req, res) =>{
-    try {
+function unitExists(tree, name, type) {
+  for (const node of tree) {
+    if (
+      node.name.toLowerCase() === name.toLowerCase() &&
+      node.type.toLowerCase() === type.toLowerCase()
+    ) {
+      return true; // ✅ Found a match
+    }
+    // 🔁 Recursively search children if they exist
+    if (node.children && node.children.length > 0) {
+      const foundInChildren = unitExists(node.children, name, type);
+      if (foundInChildren) return true;
+    }
+  }
+  return false; // ❌ Not found
+}
+
+
+const addUnits = async (req, res) => {
+  try {
     const { name, type, parentId } = req.body;
 
-    // create a new org unit
-    const newOrgUnit = new OrgUnit({
+    // 🔍 Check if exists under the same parent
+    const exists = await orgUnitStructure.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+      type,
+      parentId: parentId || null
+    });
+
+    if (exists) {
+      return res
+        .status(400)
+        .json({ message: "A unit with the same name and type already exists under this parent" });
+    }
+
+    // ✅ Create new org unit
+    const newOrgUnit = new orgUnitStructure({
       name,
       type,
-      parentId: parentId || null // in case it's top level
+      parentId: parentId || null
     });
 
     await newOrgUnit.save();
@@ -23,14 +54,38 @@ const addUnits = async (req, res) =>{
     console.error(error);
     res.status(500).json({ message: "Failed to create organization unit", error });
   }
-}
+};
+
+
+// const addUnits = async (req, res) =>{
+//     try {
+//     const { name, type, parentId } = req.body;
+
+//     // create a new org unit
+//     const newOrgUnit = new orgUnitStructure({
+//       name,
+//       type,
+//       parentId: parentId || null // in case it's top level
+//     });
+
+//     await newOrgUnit.save();
+
+//     res.status(201).json({
+//       message: "Organization Unit created successfully",
+//       orgUnit: newOrgUnit
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Failed to create organization unit", error });
+//   }
+// }
 
 
 
 // get each unit
  const getEachUnit = async (req, res) => {
   try {
-    const units = await OrgUnit.find().lean(); // get all units
+    const units = await orgUnitStructure.find().lean(); // get all units
 
     const tree = buildOrgTree(units, null); // start from top (parentId = null)
 
@@ -48,7 +103,7 @@ const getbranchByID = async (req, res) => {
     const { id } = req.params;
 
     // 1️⃣ Get all units
-    const allUnits = await OrgUnit.find().lean();
+    const allUnits = await orgUnitStructure.find().lean();
 
     // 2️⃣ Find the root unit (the one requested)
     const root = allUnits.find(u => String(u._id) === id);

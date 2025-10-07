@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AdminAddUnits: typeof import('./src/components/AdminAddUnits.vue')['default']
     AdminNavigation: typeof import('./src/components/AdminNavigation.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     ClozeQuestions: typeof import('./src/components/ClozeQuestions.vue')['default']

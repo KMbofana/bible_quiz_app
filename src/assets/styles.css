@@ -1,0 +1,667 @@
+.FM {
+  height: 100vh;
+  width: 70vh;
+  /* padding: 10px; */
+}
+.FMP {
+  background-color: #9b9c9d;
+  height: 100vh;
+}
+.FMs {
+  background-color: #9b9c9d;
+  height: 100vh;
+  padding: 10px;
+}
+.formRedesign {
+  width: 100%;
+}
+.formWidth {
+  width: 30vw;
+}
+.stepFormbg {
+  background: #9b9c9d;
+}
+.regBtn {
+  background-color: #000;
+}
+.sylBtn {
+  background-color: #00244e;
+  color: white;
+  margin-top: 20px;
+  width: 15vh;
+  padding: 5px;
+  border-radius: 5px;
+}
+.textInput {
+  height: 50px;
+  margin-top: 30px;
+  width: 30vw;
+  border-radius: 5px;
+  padding: 10px;
+}
+.selectInputLogin {
+  margin-top: 30px;
+  height: 4vw;
+  width: 30vw;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 40px;
+}
+.formControl {
+  background: #000;
+}
+.radioDiv {
+  width: 400px;
+}
+.textInputFee {
+  background: #fff;
+  color: #000;
+  height: 50px;
+  margin-top: 30px;
+  width: 30vw;
+  border-radius: 5px;
+}
+.textInputCurrency {
+  background: #fff;
+  color: #000;
+  height: 50px;
+  margin-top: 30px;
+  border-radius: 5px;
+}
+.textInputSelect {
+  height: 50px;
+  margin-top: 10px;
+  width: 30vw;
+  border-radius: 5px;
+  padding: 10px;
+}
+.textInputSelect2 {
+  width: 30vw;
+  height: 50px;
+}
+.inputContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 5vh;
+}
+.inputContainers {
+  display: flex;
+  align-items: center;
+  margin-top: 25vh;
+}
+.btnPosition {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.sylLink {
+  color: #e3e5e7;
+}
+.textInputff {
+  width: 1000;
+}
+.optionDiv {
+  /* background-color: red; */
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  margin-top: 10px;
+  width: 30vw;
+}
+
+.mobileNavigation {
+  display: none;
+}
+
+/* general styling */
+.subBtn {
+  background-color: #00244e;
+  color: white;
+  margin-top: 30px;
+  width: 15vh;
+  padding: 5px;
+  border-radius: 5px;
+}
+.textInputOnWhite {
+  height: 50px;
+  margin-top: 30px;
+  margin-left: 15px;
+  width: 30vw;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: #00244e;
+  border-style: solid;
+  color: #000;
+  padding: 10px;
+}
+.textInputOnWhiteZ {
+  height: 50px;
+  margin-top: 30px;
+  margin-left: 1px;
+  width: 30vw;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: #00244e;
+  border-style: solid;
+  color: #000;
+  padding: 10px;
+}
+
+.btnPosition {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.sylLink {
+  color: #e3e5e7;
+}
+.checkboxDiv {
+  margin-top: 10px;
+  /* width: 29vw; */
+}
+.formOnWhiteDesign {
+  background-color: #eae2e2;
+  /* opacity: 0.8; */
+  width: 40vw;
+  align-self: center;
+}
+.textonGrayTitle {
+  color: #00244e;
+}
+.sheetForm {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+}
+.titleContainerMain {
+  border: 1px solid #00244e;
+  border-radius: 2px;
+  padding: 15px;
+  width: 47vw;
+}
+.titleContainer {
+  border: 1px solid #00244e;
+  border-radius: 2px;
+  padding: 15px;
+  margin-left: 16px;
+}
+.pText {
+  color: #00244e;
+  font-size: larger;
+}
+.butnDiv {
+  display: flex;
+  justify-content: center;
+  width: 47vw;
+}
+
+.genDashboard {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100vw;
+}
+
+/* zeuc admin styles*/
+
+.dashBoardCardsZEUC {
+  margin-top: 70pt;
+  margin-bottom: 4vh;
+}
+.programBtn {
+  background-color: #00244e;
+  color: white;
+  width: 47vw;
+  height: 7vh;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.textInputAdmin {
+  border: 1px;
+  border-style: solid;
+  border-color: #00244e;
+  border-radius: 5px;
+  padding: 5px;
+  height: 6vh;
+  color: #00244e;
+  width: 47vw;
+}
+.textInputAdminRoleProgram {
+  border-radius: 5px;
+  padding: 5px;
+  height: 6vh;
+  color: #00244e;
+  width: 47vw;
+  margin-bottom: 15px;
+}
+.comboBoxWidth {
+  width: 32.6vw;
+}
+.textInputAdminRole {
+  border: 1px;
+  border-style: solid;
+  border-color: #00244e;
+  border-radius: 5px;
+  padding: 5px;
+  height: 6vh;
+  color: #00244e;
+  width: 30vw;
+}
+.Textarea {
+  border: 1px;
+  border-style: solid;
+  border-color: #00244e;
+  border-radius: 5px;
+  padding: 5px;
+  height: 10vh;
+  color: #00244e;
+  width: 47vw;
+}
+.dialogFormbg {
+  background-color: #9b9c9d;
+  width: 50vw;
+}
+
+.divTimes {
+  width: 47vw;
+  margin-top: 15px;
+}
+.textInputOnChurch {
+  height: 50px;
+  margin-top: 30px;
+  width: 31vw;
+  color: #000;
+  padding: 10px;
+}
+.textAreaOnChurch {
+  margin-top: 30px;
+  margin-left: 15px;
+  width: 31vw;
+  color: #000;
+  padding: 10px;
+}
+.dateInputOnWhite {
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: #00244e;
+  border-style: solid;
+  height: 50px;
+
+  width: 10vw;
+  color: #000;
+  padding: 10px;
+}
+.routerLink {
+  text-decoration: none;
+}
+.userMngmntDesign {
+  width: 40vw;
+}
+.menuCard {
+  margin-top: 10px;
+  background-color: white;
+}
+.formOnWhiteDesignCPD {
+  background-color: #eae2e2;
+  width: 40vw;
+  align-self: center;
+}
+
+.unAuthorizedUser {
+  color: red;
+  font-size: 200px;
+}
+.textInputDialog {
+  width: 300pt;
+  border: 1px;
+  border-style: solid;
+  border-color: #00244e;
+  border-radius: 5px;
+  padding: 5px;
+  color: #00244e;
+}
+.catalogueDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 25px;
+}
+
+/* breadcrum general */
+.breadCrum {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #00244e;
+  height: 10vh;
+  width: 100vw;
+  box-shadow: 2px 2px 2px 2px #8a8888;
+  z-index: 150;
+}
+.breadCrumTitle {
+  color: white;
+  margin-left: 5px;
+}
+.textBoxSearch {
+  width: 30vw;
+  border-radius: 5px;
+  margin-top: 5pt;
+  padding: 6pt;
+}
+.cpdText {
+  font-size: small;
+}
+.cpdBoarder {
+  border-color: white;
+  border-radius: 5px;
+}
+.textColor {
+  color: #00244e;
+}
+.logoMobile {
+  margin: 1px;
+  margin-left: 80px;
+}
+
+.profileCards {
+  display: flex;
+  flex-direction: row;
+}
+.profCard {
+  width: 25vw;
+}
+.profCard2 {
+  width: 50vw;
+}
+.toastDesign {
+  background-color: #00244e;
+}
+.assSection {
+  height: 42px;
+  width: 24vw;
+  text-wrap: wrap;
+}
+
+.spinnerPosition {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+
+.spinnerLoader {
+  /* position: absolute; */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5000;
+}
+.parentOfLoader {
+  position: relative;
+}
+.snackBarBg {
+  background: green;
+}
+
+.roleContainer {
+  display: flex;
+  flex-direction: row;
+  background-color: #dddddd;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+@media (max-width: 500px) {
+  .textInput {
+    width: 70vw;
+    background-color: aqua;
+  }
+  .selectInputLogin {
+    width: 70vw;
+    height: 60px;
+    margin-bottom: 0;
+  }
+
+  .formWidth {
+    width: 100vw;
+  }
+  .stepFormbg {
+    background: #9b9c9d;
+    width: 100vw;
+    padding: 10px;
+  }
+
+  .textInputFee {
+    width: 70vw;
+    background-color: aqua;
+  }
+  .textInputSelect2 {
+    width: 70vw;
+    height: 50px;
+    background-color: aqua;
+  }
+
+  .FM {
+    background-color: #9b9c9d;
+    height: 100vh;
+
+    /* padding: 10px; */
+  }
+  .FMP {
+    background-color: #9b9c9d;
+    height: 100vh;
+    /* padding: 10px; */
+  }
+  .FMs {
+    background-color: #9b9c9d;
+    height: 70vh;
+    padding-bottom: 200px;
+  }
+  .FMsMbile {
+    padding-bottom: 50px;
+  }
+
+  .formD {
+    margin-bottom: 10px;
+  }
+  .optionDiv {
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 4px;
+    width: 70vw;
+  }
+  .inputContainers {
+    display: flex;
+    align-items: center;
+    margin-top: 5vh;
+  }
+
+  .displayNone {
+    display: none;
+  }
+
+  .mobileNavigation {
+    display: block;
+  }
+  .humBurger {
+    background-color: #00244e;
+    color: #fff;
+  }
+  .menuCard {
+    background-color: white;
+  }
+  .menuCard {
+    background-color: aqua;
+  }
+
+  /*zeuc admin styles */
+  .dialogFormbg {
+    width: 100vw;
+  }
+  .titleContainer {
+    border: 1px solid #00244e;
+    border-radius: 2px;
+    margin-left: 15px;
+  }
+  .textInputAdmin {
+    border: 1px;
+    border-style: solid;
+    border-color: #00244e;
+    border-radius: 5px;
+    padding: 5px;
+    height: 6vh;
+    color: #00244e;
+    width: 70vw;
+  }
+  .textInputAdminRole {
+    border: 1px;
+    border-style: solid;
+    border-color: #00244e;
+    border-radius: 5px;
+    padding: 5px;
+    height: 6vh;
+    color: #00244e;
+    width: 70vw;
+  }
+
+  .Textarea {
+    width: 70vw;
+  }
+  .divTimes {
+    display: flex;
+    flex-direction: row;
+    width: 60vw;
+    margin-right: 60px;
+  }
+
+  .formDivMobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+  }
+  .formOnWhiteDesign {
+    background-color: #eae2e2;
+    /* opacity: 0.8; */
+    width: 100vw;
+    align-self: center;
+  }
+
+  .formOnWhiteDesignCPD {
+    background-color: #eae2e2;
+    width: 100vw;
+    align-self: center;
+  }
+  .textInputOnWhite {
+    height: 50px;
+    margin-top: 30px;
+    margin-left: 15px;
+    width: 60vw;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #00244e;
+    border-style: solid;
+    color: #000;
+    padding: 10px;
+  }
+  .textInputOnWhiteZ {
+    height: 50px;
+    margin-top: 30px;
+    margin-left: 1px;
+    width: 60vw;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #00244e;
+    border-style: solid;
+    color: #000;
+    padding: 10px;
+  }
+  .textAreaOnChurch {
+    margin-top: 30px;
+    width: 65vw;
+    margin-left: 15px;
+    color: #000;
+  }
+  .menuCard {
+    margin-top: 2px;
+    background-color: white;
+  }
+  .titleContainerMain {
+    border: 1px solid #00244e;
+    border-radius: 2px;
+    padding: 15px;
+    width: 70vw;
+  }
+  .dateInputOnWhite {
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #00244e;
+    border-style: solid;
+    height: 50px;
+
+    width: 28vw;
+    color: #000;
+    padding: 10px;
+  }
+  .textInputDialog {
+    width: 200pt;
+    border: 1px;
+    border-style: solid;
+    border-color: #00244e;
+    border-radius: 5px;
+    padding: 5px;
+    color: #00244e;
+  }
+  .catalogueDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    width: 5vw;
+  }
+
+  /* breadcrum general */
+  .breadCrum {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #00244e;
+    height: 10vh;
+    width: 100vw;
+    box-shadow: 2px 2px 2px 2px #8a8888;
+    z-index: 150;
+  }
+  .searchMobile {
+    display: none;
+  }
+  .logoMobile {
+    margin: 10px;
+    margin-left: 5px;
+  }
+  .genDashboard {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100vw;
+  }
+  .profileCards {
+    display: flex;
+    flex-direction: column;
+  }
+  .detsCard {
+    width: 90vw;
+  }
+  .textInputOnChurch {
+    height: 50px;
+    margin-top: 30px;
+    width: 65vw;
+    color: #000;
+    padding: 10px;
+  }
+}

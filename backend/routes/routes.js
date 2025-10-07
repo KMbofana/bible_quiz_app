@@ -25,7 +25,7 @@ router.get('/api/orgunits/get_each_unit',orgStructureController.getEachUnit)
 
 //get branch by ID
 //GET http://localhost:3001/api/orgunits/670f999999abcde7890f4444/branch
-router.post('/:id/branch',orgStructureController.getbranchByID )
+router.get('/api/orgunits/branch/:id',orgStructureController.getbranchByID )
 
 
 // student view questions
