@@ -50,6 +50,9 @@ import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from "jwt-decode";
 import { prod } from '../../api';
+import { useAuthStore } from '../stores/auth';
+
+const authStore = useAuthStore()
 
 
     const email = ref('')
@@ -79,10 +82,11 @@ import { prod } from '../../api';
             const decoded = jwtDecode(result.data.token)
                 console.log(decoded.role)
                 if(decoded.role ==="user"){
-                  
+                  authStore.userLogin(decoded.role, result.data.token)
+                  console.log(decoded.role)
                     route.push('/student_portal')
                 }else{
-                  
+                  authStore.userLogin(decoded.role, result.data.token)
                     route.push('/create_questions')
                 }
             

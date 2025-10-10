@@ -77,6 +77,15 @@
   </v-container>
 </template>
 
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "roles": ["user"]
+  }
+}
+</route>
+
 <script setup>
 import { ref, computed } from 'vue'
 import QuizQuestion from '../components/QuizQuestion.vue'

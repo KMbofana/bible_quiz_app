@@ -37,6 +37,15 @@
     </v-container>
 </template>
 
+<route lang="json">
+{
+  "meta": {
+    "requiresAuth": true,
+    "roles": ["user"]
+  }
+}
+</route>
+
 <script setup>
 import {useQuizStore} from "../stores/quizLevel"
 import axios from "axios"
