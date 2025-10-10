@@ -22,7 +22,7 @@ declare module 'vue-router/auto-routes' {
     '/admin_add_unit': RouteRecordInfo<'/admin_add_unit', '/admin_add_unit', Record<never, never>, Record<never, never>>,
     '/cloze_questions': RouteRecordInfo<'/cloze_questions', '/cloze_questions', Record<never, never>, Record<never, never>>,
     '/create_cloze_questions': RouteRecordInfo<'/create_cloze_questions', '/create_cloze_questions', Record<never, never>, Record<never, never>>,
-    '/create_mc_questions': RouteRecordInfo<'/create_mc_questions', '/create_mc_questions', Record<never, never>, Record<never, never>>,
+    '/create_questions': RouteRecordInfo<'/create_questions', '/create_questions', Record<never, never>, Record<never, never>>,
     '/human_mc_questions': RouteRecordInfo<'/human_mc_questions', '/human_mc_questions', Record<never, never>, Record<never, never>>,
     '/multiple_questions': RouteRecordInfo<'/multiple_questions', '/multiple_questions', Record<never, never>, Record<never, never>>,
     '/registration': RouteRecordInfo<'/registration', '/registration', Record<never, never>, Record<never, never>>,

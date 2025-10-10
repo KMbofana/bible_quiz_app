@@ -1,12 +1,18 @@
 <template>
-       <v-navigation-drawer app permanent>
+       
+        <v-navigation-drawer
+        v-model="drawer"   
+         app
+        :permanent="$vuetify.display.mdAndUp"
+        temporary
+        >
                     <v-list>
                         <RouterLink class="redirectLink" to="/#">
                             <v-list-item >
                                 <v-list-item-title>Dashboard</v-list-item-title>
                             </v-list-item>
                         </RouterLink>
-                        <RouterLink class="redirectLink" to="/create_mc_questions">
+                        <RouterLink class="redirectLink" to="/create_questions">
                             <v-list-item >
                                 <v-list-item-title >Create Question</v-list-item-title>
                             </v-list-item>
@@ -28,7 +34,19 @@
                         </RouterLink>
                     </v-list>
                 </v-navigation-drawer>
+                
+   <v-app-bar app>
+      <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer" />
+    </v-app-bar>
+ 
 </template>
+<script setup>
+import { ref } from 'vue';
+
+const drawer = ref(null)
+
+
+</script>
 
 <style>
 .redirectLink{

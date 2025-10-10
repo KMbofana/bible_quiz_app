@@ -1,12 +1,8 @@
 
 <template>
+    <StudentNavigation />
    <v-container>
-        <v-row>
-            <v-col cols="2">
-                <StudentNavigation />
-                
-            </v-col>
-            <v-col cols="12">
+           
                 <v-card>
                     <v-card-title class="text-h5">Quiz Programs</v-card-title>
                     <v-card-text>
@@ -36,8 +32,7 @@
                     </v-col>
                     <v-col cols="6"></v-col>
                 </v-row>
-            </v-col>
-        </v-row>
+            
 
     </v-container>
 </template>

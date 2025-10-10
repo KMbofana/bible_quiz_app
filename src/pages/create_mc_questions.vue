@@ -1,3 +1,0 @@
-<template>
-    <CreateMCQuestions/>
-</template>

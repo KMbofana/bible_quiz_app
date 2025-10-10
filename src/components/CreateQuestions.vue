@@ -1,10 +1,6 @@
 <template>
+    <AdminNavigation />
     <v-container>
-        <v-row>
-            <v-col cols="2">
-                <AdminNavigation />
-            </v-col>
-            <v-col cols="12">
                 <!--  section to create mc questions-->
                 <v-card>
                     <v-card-title>Create Multiple Choice Questions</v-card-title>
@@ -177,8 +173,7 @@
                     </v-card-actions>
                   </v-card>
                 
-            </v-col>
-        </v-row>
+          
     </v-container>
 </template>
 

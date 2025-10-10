@@ -1,14 +1,11 @@
 <template>
   
-    <v-container class="bg-white h-100 w-100">
-        <v-row>
-            <v-col cols="2">
-                <AdminNavigation />
-            </v-col>
-            <v-col cols="12">
-                <div class=" d-flex justify-center">
-        <h4>Create Church Organization</h4>
-      </div>
+    <AdminNavigation />
+      <v-container class="pa-8">
+      <v-card class="pa-6">
+               <div class=" d-flex justify-center">
+                  <h4>Create Church Organization</h4>
+               </div>
       <div class="ma-10 ga-10">
         <div class="d-flex justify-center ">
           <div class="d-flex flex-row ga-4 ">
@@ -438,13 +435,11 @@
             <v-btn color="rgb(154, 63, 63)" @click="initialize"> Reset </v-btn>
           </template>
         </v-data-table>
+      </v-container>   
+            </v-card>
       </v-container>
-            </v-col>
-        </v-row>
   
-      
-    </v-container>
-  
+
 </template>
 
 <script setup>
@@ -452,6 +447,10 @@ import { ref } from "vue";
 import axios from "axios";
 import {prod} from "../../api";
 import { useToast } from "vue-toastification";
+import { shallowRef } from 'vue';
+
+
+const open = shallowRef(true)
 
 const toast = useToast();
 const loading = ref(false)

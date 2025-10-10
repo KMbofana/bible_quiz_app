@@ -1,10 +1,7 @@
 <template>
+  <StudentNavigation/>
   <v-container>
-    <v-row>
-      <v-col cols="2">
-        <StudentNavigation/>
-      </v-col>
-      <v-col cols="12">
+  
         <!-- Start Screen -->
   <v-container
     v-if="!quizStarted"
@@ -81,8 +78,6 @@
       </div>
     </v-col>
   </v-container>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
 
