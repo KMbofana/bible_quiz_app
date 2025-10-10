@@ -153,11 +153,10 @@ const loading = ref(false)
                 toast.error(err.response.data.message, {
         timeout: 2000
       })
+      loading.value = false
             });
         } catch (err) {
             error.value = err.message
-        } finally {
-            loading.value = false
         }
     }
 </script>

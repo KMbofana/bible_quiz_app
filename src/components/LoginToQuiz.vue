@@ -30,8 +30,7 @@
                 ></v-text-field>
             </v-responsive>
             <v-btn 
-                
-                color="primary"
+                color="rgb(154, 63, 63)"
                 variant="flat"
                 @click="login"
                 size="large"
@@ -62,8 +61,8 @@ import { prod } from '../../api';
     const route = useRouter()
 
     const login = async () => {
-        error.value = ''
         loading.value = true
+        error.value = ''
        console.log(loading.value)
         const data = {
             email:email.value,
@@ -71,7 +70,7 @@ import { prod } from '../../api';
         }
 
         try {
-          axios.post(`${prod}login`,data )
+         await axios.post(`${prod}login`,data )
           .then((result) => {
             console.log(result)
             toast.success(result.data.message, {
@@ -84,7 +83,7 @@ import { prod } from '../../api';
                     route.push('/student_portal')
                 }else{
                   
-                    route.push('/create_mc_questions')
+                    route.push('/create_questions')
                 }
             
           }).catch((err) => {
@@ -92,12 +91,11 @@ import { prod } from '../../api';
             toast.error(err.response.data.message, {
                 timeout:3000
             })
+            loading.value=false
           });
         } catch (err) {
             error.value = err.message
-        } finally {
-            loading.value = false
-        }
+        } 
     }
 
     
