@@ -121,8 +121,13 @@ const getScoreColor = () => {
 };
 
 const isCorrect = (index) => {
+  console.log("A",index)
+  console.log("B",props.answers[index])
   const userAnswer = props.answers[index];
-  return userAnswer === props.questions[index].correctAnswer;
+  console.log("C",userAnswer)
+  console.log("D",props.questions[index].correctAnswer)
+  console.log("E",userAnswer === props.questions[index].correctAnswer)
+  return userAnswer === Number(props.questions[index].correctAnswer);
 };
 
 const getUserAnswerText = (index) => {

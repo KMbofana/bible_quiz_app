@@ -12,6 +12,7 @@ router.get('/', (req, res)=>{
 
 router.post('/api/user_registration', usersController.createUser)
 router.post('/api/login', usersController.userLogin)
+router.post('/api/registrar_login', usersController.registrarLogin)
 
 
 router.post('/api/human_create_cloze_questions', questionsController.saveClozeQuestions)

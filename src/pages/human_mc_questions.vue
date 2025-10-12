@@ -95,12 +95,20 @@
 import { ref, computed, onMounted } from 'vue'
 import QuizQuestion from '../components/QuizQuestion.vue'
 import QuizResults from '../components/QuizResults.vue'
-import { useQuizStore } from '@/stores/quizLevel'
+import { useQuizStore } from '../stores/quizLevel'
 import axios from 'axios'
 import { prod } from '../../api';
+import { useToast } from 'vue-toastification'
+import {useQuizTimer} from '../stores/quiztimer'
+
+import {useAuthStore} from "../stores/auth"
 
 const quizStore = useQuizStore()
 const data = ref([])
+
+const toast = useToast()
+const authStore = useAuthStore()
+const quiztimer = useQuizTimer()
 
 onMounted(async () => {
 
@@ -111,8 +119,14 @@ onMounted(async () => {
         levelName: quizStore.name,
       },
     })
+    console.log(result.data)
+   if(result.data.questions.length === 0){
+      toast.error(`no questions in ${authStore.userDistrict} district`, {timeout:4000})
+   }else{
+     console.log(result)
     data.value = result.data.questions[0].questions
     console.log('Data loaded:', result.data.questions[0].questions)
+   }
   } catch (error) {
     console.error('Failed to load:', error)
   }
@@ -129,7 +143,12 @@ const quizStarted = ref(false)
 const currentQuestion = computed(() => data.value[currentQuestionIndex.value])
 const isLastQuestion = computed(() => currentQuestionIndex.value === data.value.length - 1)
 
-const startQuiz = () => { quizStarted.value = true }
+
+const startQuiz = () => { 
+  quizStarted.value = true 
+  quiztimer.piniaStartQuiz()
+  console.log("initiating method",quiztimer.isQuizStarted)
+}
 
 const handleAnswer = (answerIndex) => {
   selectedAnswer.value = answerIndex
@@ -137,11 +156,13 @@ const handleAnswer = (answerIndex) => {
   newAnswers[currentQuestionIndex.value] = answerIndex
   answers.value = newAnswers
   showResult.value = true
+  
 }
 
 const handleNext = () => {
   if (isLastQuestion.value) {
     quizCompleted.value = true
+    quiztimer.piniaEndQuiz()
   } else {
     currentQuestionIndex.value++
     selectedAnswer.value = null
@@ -156,11 +177,21 @@ const handleRestart = () => {
   showResult.value = false
   quizCompleted.value = false
   quizStarted.value = false
+  quiztimer.piniaStartQuiz()
 }
 
 const calculateScore = () => {
   return answers.value.reduce((score, answer, index) => {
-    return answer === data.value[index].correctAnswer ? score + 1 : score
+    return answer === Number(data.value[index].correctAnswer) ? score + 1 : score
   }, 0)
 }
+
+watch(()=>quiztimer.quizFinished,
+(newVal)=> {
+     if (newVal) {
+      console.log("quiz ended due to time", newVal);
+      quizCompleted.value = true; // your local ref
+    }
+})
+
 </script>

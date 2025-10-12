@@ -67,7 +67,13 @@ const authStore = useAuthStore()
         loading.value = true
         error.value = ''
        console.log(loading.value)
-        const data = {
+        const isRegistrar = await registraLogin();
+        console.log(isRegistrar)
+        if(isRegistrar){
+            route.push('/registrar_create_accounts')
+        }else{
+            console.log('checking other user types')
+            const data = {
             email:email.value,
             password:password.value
         }
@@ -82,11 +88,11 @@ const authStore = useAuthStore()
             const decoded = jwtDecode(result.data.token)
                 console.log(decoded.role)
                 if(decoded.role ==="user"){
-                  authStore.userLogin(decoded.role, result.data.token)
+                  authStore.userLogin(decoded.role, decoded.district,result.data.token)
                   console.log(decoded.role)
                     route.push('/student_portal')
                 }else{
-                  authStore.userLogin(decoded.role, result.data.token)
+                  authStore.userLogin(decoded.role,decoded.district, result.data.token)
                     route.push('/create_questions')
                 }
             
@@ -100,6 +106,27 @@ const authStore = useAuthStore()
         } catch (err) {
             error.value = err.message
         } 
+        }
+    }
+
+    const registraLogin = async() =>{
+       try {
+           const data = {
+            email:email.value,
+            password:password.value
+        }
+
+        const loginResult = await axios.post(`${prod}registrar_login`, data)
+        
+        console.log(loginResult)
+        console.log(loginResult.data)
+        console.log(loginResult.data.status)
+
+       return !!loginResult.data.status
+       } catch (error) {
+        console.error("Login failed:", error);
+         return false;
+       }
     }
 
     

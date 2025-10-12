@@ -4,6 +4,7 @@ const db = require('./connections/dbconnect');
 const router = require('./routes/routes');
 const bodyParser = express.urlencoded()
 const cors = require('cors')
+const usersController = require('./controllers/usersController')
 
 // Load SSL certificate and key
 // const options = {
@@ -14,6 +15,7 @@ const cors = require('cors')
 const app = express();
 const port = 3001;
 db.connection()
+usersController.createSuperUser()
 app.use(cors())
 app.use(bodyParser)
 app.use(express.json());

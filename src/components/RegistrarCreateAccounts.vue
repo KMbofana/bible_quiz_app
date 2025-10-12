@@ -1,7 +1,8 @@
 <template>
-   <v-container>
-     <div class="register-account">
-        <h2>Register Bible Quiz Account</h2>
+    <RegistrarNavigation/>
+    <v-container>
+        <div class="register-account">
+        <h2>Create User Account</h2>
         <!-- <form @submit.prevent="register"> -->
             <v-responsive
                 class=""
@@ -78,7 +79,6 @@
                 :items="['user', 'admin']"
                 v-model="role"
                 required
-                v-show="false"
                 ></v-select>
         </v-responsive>
            
@@ -106,8 +106,11 @@
             <div v-if="error" class="error">{{ error }}</div>
         <!-- </form> -->
     </div>
-   </v-container>
+
+    </v-container>
+
 </template>
+
 
 <script setup>
 import axios from 'axios'
@@ -125,7 +128,7 @@ const lastname = ref('')
 const phone = ref('')
 const district = ref('')
 const email = ref('')
-const role = ref('user')
+const role = ref('')
 const password = ref('')
 const error = ref('')
 const loading = ref(false)

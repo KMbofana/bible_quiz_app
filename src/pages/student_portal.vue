@@ -48,29 +48,15 @@
 
 <script setup>
 import {useQuizStore} from "../stores/quizLevel"
-import axios from "axios"
-import { prod } from '../../api';
+import {useAuthStore} from "../stores/auth"
 
 const quizStore = useQuizStore()
+const authStore = useAuthStore()
+
     const handleQuizLevel = (level)=>{
-        const levelName = "Zuda";
-        console.log(level)
+        console.log("user district ===",authStore.userDistrict)
         quizStore.setQuizLevel(level)
-        quizStore.setLevelName(levelName)
-        axios.get(`${prod}questions/student_view_mc_questions`,
-            {
-                 params: {
-                    quizLevel:level,
-                    levelName
-                }
-            }
-        )
-        .then((result) => {
-            console.log(result.data)
-            
-        }).catch((err) => {
-         console.error(err)   
-        });
+        quizStore.setLevelName(authStore.userDistrict)
     }
 
 </script>

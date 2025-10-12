@@ -73,9 +73,10 @@ const emit = defineEmits(['answer'])
  * Returns Vuetify button color for each answer state.
  */
 const getButtonColor = (index) => {
+  console.log(index, props.question.correctAnswer)
   if (props.showResult) {
-    if (index === props.question.correctAnswer) return 'green'
-    if (index === props.selectedAnswer && index !== props.question.correctAnswer) return 'red'
+    if (index === Number(props.question.correctAnswer)) return 'green'
+    if (index === Number(props.selectedAnswer) && index !== Number(props.question.correctAnswer)) return 'red'
     return 'grey'
   } else if (props.selectedAnswer === index) {
     return 'secondary'

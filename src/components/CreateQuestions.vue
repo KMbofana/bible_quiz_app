@@ -81,7 +81,7 @@
                                     type="radio"
                                     class="ml-2"
                                     v-model="selectedOption"
-                                    :value="option"
+                                    :value="index"
                                 />
                                 <!-- Delete button -->
                                 <button @click="removeOption(index)" class="ml-2 text-red">
