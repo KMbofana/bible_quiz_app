@@ -89,7 +89,7 @@ const authStore = useAuthStore()
                 console.log(decoded.role)
                 if(decoded.role ==="user"){
                   authStore.userLogin(decoded.role, decoded.district,result.data.token)
-                  console.log(decoded.role)
+                //   console.log(decoded.district)
                     route.push('/student_portal')
                 }else{
                   authStore.userLogin(decoded.role,decoded.district, result.data.token)

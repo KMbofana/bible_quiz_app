@@ -28,6 +28,8 @@ router.get('/api/orgunits/get_each_unit',orgStructureController.getEachUnit)
 //GET http://localhost:3001/api/orgunits/670f999999abcde7890f4444/branch
 router.get('/api/orgunits/branch/:id',orgStructureController.getbranchByID )
 
+//find dstrict
+router.get('/api/orgunits/get_branch_name/:branchname',orgStructureController.findBrachCascade)
 
 // student view questions
 router.get('/api/questions/student_view_cloze_questions', questionsController.studentViewClozeQuestions)

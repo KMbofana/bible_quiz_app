@@ -116,7 +116,7 @@ onMounted(async () => {
     const result = await axios.get(`${prod}questions/student_view_mc_questions`, {
       params: {
         quizLevel: quizStore.quizLevel,
-        levelName: quizStore.name,
+        levelName: authStore.userDistrict,
       },
     })
     console.log(result.data)

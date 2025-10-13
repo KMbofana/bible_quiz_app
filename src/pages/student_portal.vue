@@ -20,7 +20,10 @@
                 <v-row class="mt-5">
                     <v-col cols="6">
                         <v-card>
-                            <v-card-title>District - {{ `${quizStore.currentLevel}` }}</v-card-title>
+                            <v-card-title>District - {{ `${authStore.userDistrict}` }}</v-card-title>
+                            <v-card-subtitle class="text-red" v-if="quizStore.currentLevel">Attempting {{ quizStore.currentLevel }} Questions</v-card-subtitle>
+                            <br/>
+                            <v-divider></v-divider>
                             <v-card-subtitle>Select Quistionier Type</v-card-subtitle>
                             <v-card-actions>
                                 <div class="d-flex flex-row">
@@ -47,16 +50,19 @@
 </route>
 
 <script setup>
+import {ref} from 'vue'
 import {useQuizStore} from "../stores/quizLevel"
 import {useAuthStore} from "../stores/auth"
 
 const quizStore = useQuizStore()
 const authStore = useAuthStore()
 
+
+
     const handleQuizLevel = (level)=>{
-        console.log("user district ===",authStore.userDistrict)
+      
         quizStore.setQuizLevel(level)
-        quizStore.setLevelName(authStore.userDistrict)
+        // quizStore.setLevelName(authStore.userDistrict)
     }
 
 </script>

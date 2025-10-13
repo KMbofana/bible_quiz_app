@@ -130,8 +130,63 @@ const getbranchByID = async (req, res) => {
 }
 
 
+const findBrachCascade = (req, res)=>{
+  const {branchname} = req.params
+console.log(branchname)
+  try {
+    orgUnitStructure.find({name:branchname})
+    .then(async (result)=>{
+      
+     const resTree = await get_branchByID(result[0]._id.toString())
+     console.log(resTree)
+      res.status(200).json({resTree:resTree})
+    }).catch((error)=>{
+      console.log(error)
+      res.status(403).json({error})
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({error})
+    
+  }
+
+}
+
+const get_branchByID = async (id) => {
+  try {
+    
+
+    // 1️⃣ Get all units
+    const allUnits = await orgUnitStructure.find().lean();
+
+    // 2️⃣ Find the root unit (the one requested)
+    const root = allUnits.find(u => String(u._id) === id);
+    if (!root) {
+      return { message: "OrgUnit not found" };
+    }
+
+    // 3️⃣ Build tree from this root
+    const children = buildOrgTree(allUnits, id);
+
+    // 4️⃣ Combine root + children
+    const branch = {
+      _id: root._id,
+      name: root.name,
+      type: root.type,
+      children
+    };
+
+    return branch
+  } catch (error) {
+    console.error(error);
+    return {message: "Failed to fetch branch", error};
+  }
+}
+
+
 module.exports = {
     addUnits,
     getEachUnit,
-    getbranchByID
+    getbranchByID,
+    findBrachCascade
 }

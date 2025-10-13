@@ -11,7 +11,7 @@
             >
             <v-select
                 label="Quiz Level"
-                :items="['District', 'Federation', 'Conference', 'Union', 'SID', 'GC']"
+                :items="['District', 'Federation', 'Conference', 'Union', 'Division', 'GC']"
                 v-model="quizLevel"
                 class="ml-4 mr-4 pb-4"
                 required
@@ -21,16 +21,15 @@
          <v-responsive
                 class=""
             >
-            <v-text-field
-                            hide-details="auto"
-                            class="ml-4 mr-4 pb-4"
-                            label="Name"
-                            placeholder="WHYFED"
-                            type="input"
-                            v-model="levelName"
-                            :rules="rules"
-                            
-                            ></v-text-field>
+            <v-select
+                label="Level Name"
+                :items="levelNames"
+                item-title="name"
+                item-value="name"
+                v-model="levelName"
+                class="ml-4 mr-4 pb-4"
+                required
+                ></v-select>
            
         </v-responsive>
                         <v-responsive
@@ -201,6 +200,16 @@ const levelName=ref('')
 //an array to send to the backend
 const questions=ref([])
 
+//populating level arrays
+ const divisions = ref([])
+ const unions = ref([])
+ const conferences = ref([])
+ const federations = ref([])
+ const districts = ref([])
+ const churches = ref([])
+ 
+ const levelNames= ref([])
+
 const alphabetLabel = (index) => String.fromCharCode(65 + index)
 
 // Add new option dynamically
@@ -228,14 +237,15 @@ const saveQuestion = ()=>{
         toast.error('indicate the correct answer from your options')
         loading.value=false
     }else{
-        openPreview.value = true;
-    if(type.value === 'mc'){
-            servingMCQuestions.value = true
-            questions.value.push({question:question.value, type:type.value, reference:reference.value, options: [...options.value], correctAnswer:selectedOption.value})
-          
+      if(type.value === 'mc'){
+      openPreview.value = true;
+      servingMCQuestions.value = true
+      questions.value.push({question:question.value, type:type.value, reference:reference.value, options: [...options.value], correctAnswer:selectedOption.value})
+      selectedOption.value=null
         }else{
-            questions.value.push({question:question.value, type:type.value, reference:reference.value, correctAnswer:correctAnswer.value})
-            servingMCQuestions.value = false
+          openPreview.value = true;
+          questions.value.push({question:question.value, type:type.value, reference:reference.value, correctAnswer:correctAnswer.value})
+          servingMCQuestions.value = false
 
 
     }
@@ -297,4 +307,110 @@ const rules = [
       return 'This field is required.'
     },
   ]
+
+onMounted(()=>{
+    getEachUnit()
+})
+
+ const getEachUnit = async () => {
+  try {
+    const { data } = await axios.get(`${prod}orgunits/get_each_unit`)
+    console.log("Fetched Data:", data)
+
+    // ✅ Reset all arrays
+    divisions.value = []
+    unions.value = []
+    conferences.value = []
+    federations.value = []
+    districts.value = []
+    churches.value = []
+
+    // ✅ Recursive function
+    const traverseUnits = (nodes, level = "Division") => {
+      if (!Array.isArray(nodes)) return
+
+      nodes.forEach(node => {
+        if (!node?._id || !node?.name) return
+
+        // Push into appropriate array
+        switch (level) {
+          case "Division":
+            divisions.value.push({ id: node._id, name: node.name })
+            break
+          case "Union":
+            unions.value.push({ id: node._id, name: node.name })
+            break
+          case "Conference":
+            conferences.value.push({ id: node._id, name: node.name })
+            break
+          case "Federation":
+            federations.value.push({ id: node._id, name: node.name })
+            break
+          case "District":
+            districts.value.push({ id: node._id, name: node.name })
+            break
+          case "Church":
+            churches.value.push({ id: node._id, name: node.name })
+            break
+        }
+
+        // Determine next level name
+        const nextLevel = {
+          Division: "Union",
+          Union: "Conference",
+          Conference: "Federation",
+          Federation: "District",
+          District: "Church",
+        }[level]
+
+        // Recursively go deeper
+        if (node.children && nextLevel) {
+          traverseUnits(node.children, nextLevel)
+        }
+      })
+    }
+
+    // ✅ Start traversal from root data
+    traverseUnits(data, "Division")
+ 
+    // Debugging output
+    console.log("Divisions:", divisions.value)
+    console.log("Unions:", unions.value)
+    console.log("Conferences:", conferences.value)
+    console.log("Federations:", federations.value)
+    console.log("Districts:", districts.value)
+    console.log("Churches:", churches.value)
+    console.log(levelNames.value)
+
+  } catch (err) {
+    console.error("Error fetching units:", err)
+  }
+}
+
+
+watch(
+   quizLevel,(value) =>{
+  if(value === 'District'){
+    levelNames.value=[]
+    districts.value.map((district)=>levelNames.value.push({id:district.id, name:district.name})) 
+  }else if(value === 'Federation'){
+    levelNames.value=[]
+    federations.value.map((federation)=>levelNames.value.push({id:federation.id, name:federation.name})) 
+    
+  }else if(value === 'Conference'){
+    levelNames.value=[]
+    conferences.value.map((conference)=>levelNames.value.push({id:conference.id, name:conference.name})) 
+    
+  }else if(value === 'Union'){
+    levelNames.value=[]
+    unions.value.map((union)=>levelNames.value.push({id:union.id, name:union.name})) 
+    
+  }else{
+    levelNames.value=[]
+    divisions.value.map((division)=>levelNames.value.push({id:division.id, name:division.name})) 
+    
+  }
+   } 
+)
+
 </script>
