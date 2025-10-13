@@ -63,7 +63,7 @@
                 label="District"
                 :items="districts"
                 item-title="name"
-                item-value="id"
+                item-value="name"
                 v-model="district"
                 required
                 ></v-select>
