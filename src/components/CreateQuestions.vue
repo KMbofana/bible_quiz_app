@@ -160,8 +160,9 @@
                                 </v-list-item-title>
                              </div>
                             </v-list-item>
-                            <p class="ml-4"><strong class="text-green">Correct Answer:</strong> {{ question.correctAnswer}} </p>
-                      
+                            <!-- <p class="ml-4"><strong class="text-green">Correct Answer:</strong> {{ question.correctAnswer}} </p> -->
+                             <p class="ml-4"><strong class="text-green">Correct Answer:</strong> {{ question.options[Number(question.correctAnswer)]}} </p>
+                        
                         
                         </v-list>
                         <p v-else class="ml-4"><strong>Correct Answer:</strong> {{ question.correctAnswer }}</p>
