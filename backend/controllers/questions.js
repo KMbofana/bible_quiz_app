@@ -23,16 +23,23 @@ const saveMCQuestions = async (req, res) => {
     
    const {quizLevel,levelName, questions} = req.body;
 
-   await mcquestions.create({
-    quizLevel,
-    levelName,
-    questions
-   })
-   .then((result) => {
-    res.status(201).json({message:'multiple choice questions save successfully🎉'})
-   }).catch((err) => {
-    res.status(500).json({message:'failed to save questions 😔, please try again',err})
-   });
+   const results = await mcquestions.findOne({quizLevel, levelName});
+
+   if(!results){
+         await mcquestions.create({
+        quizLevel,
+        levelName,
+        questions
+    })
+    .then((result) => {
+        res.status(201).json({message:'multiple choice questions save successfully🎉'})
+    }).catch((err) => {
+        res.status(500).json({message:'failed to save questions 😔, please try again',err})
+    });
+   }else{
+       res.status(201).json({status:403,message:'⚠️ only one set of questions allowed per level'})
+   }
+   
 }
 
 const studentViewClozeQuestions = async (req, res) => {

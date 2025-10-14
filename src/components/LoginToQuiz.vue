@@ -74,9 +74,9 @@ const authStore = useAuthStore()
         }else{
             console.log('checking other user types')
             const data = {
-            email:email.value,
-            password:password.value
-        }
+                email:email.value,
+                password:password.value
+            }
 
         try {
          await axios.post(`${prod}login`,data )
@@ -98,13 +98,15 @@ const authStore = useAuthStore()
             
           }).catch((err) => {
             console.log(error)
+            loading.value=false
+            error.value = err.response.data.message
             toast.error(err.response.data.message, {
                 timeout:3000
             })
-            loading.value=false
           });
         } catch (err) {
-            error.value = err.message
+            error.value = "wrong username or password"
+            loading.value = false
         } 
         }
     }

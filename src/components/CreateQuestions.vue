@@ -135,7 +135,7 @@
                         variant="flat"
                         class="ml-4 mb-4"
                         type="submit"
-                        :loading="loading"
+                        :loading="isSaveQuestions"
                         >Save Question</v-btn>
                     </v-form>
                 </v-card>
@@ -143,29 +143,64 @@
                 <!--  section to preview questions and submit-->
                   <v-card v-if="openPreview" class="mt-4">
                     <v-card-title class="text-green">Preview Questions</v-card-title>
-                    <div v-for="question, index in questions">
+                    <div v-for="question, indexMain in questions">
                         <div class="border-solid border-2 rounded ml-4 mr-4 mb-4">
-                            <h3 class="ml-4">Question {{ index +1 }}: {{ question.question }}</h3>
-                        <span class="ml-4 opacity-0.2">reference: {{ question.reference }}</span>
+                            <div class="d-flex ga-2">
+                              <v-text-field class="ml-4" v-if="Number(editIndexValue) === indexMain" v-model="editedQuestionValue" :placeholder="question.question" hide-details variant="plain" density="compact" @update:model-value="val => {editedQuestionValue = val} "></v-text-field> <h3 v-else class="ml-4 mt-1">Question {{ indexMain +1 }}: {{ question.question }}</h3> 
+                            </div>
+                        <div class="d-flex ga-2">
+                          <v-text-field class="ml-4" v-if="Number(editIndexValue) === indexMain" :placeholder="question.reference " v-model="editedReferenceValue" :details="false" variant="plain" density="compact" >
+                            reference: 
+                          </v-text-field>
+                          <p v-else class="ml-4 opacity-0.2 mt-2">reference: {{question.reference}}</p>
+                        </div>
                         <v-list v-if="question.options">
                             <v-list-item
                                 v-for="(option, index) in question.options"
                                 :key="index"
                                 
                             >
-                             <div class="d-flex flex-row justify-between">
-                                 <strong>{{ alphabetLabel(index) }}.</strong>
-                                 <v-list-item-title class="ml-2">
-                                    {{ option }}
-                                </v-list-item-title>
-                             </div>
+                             <div class="d-flex ga-2">
+                                 <strong :class="editIndexValue === indexMain ? '' : 'mt-2'">{{ alphabetLabel(index) }}.</strong>
+                                    <v-text-field v-if="Number(editIndexValue) === indexMain" :key="index" max-width="300px" v-model="editedOptionValues[`${indexMain}-${index}`]" @update:model-value="val =>  editedOptionIndex = index"  variant="plain" density="compact" :placeholder="option"></v-text-field>
+                                  <p v-else>{{ option }}</p>
+                                  </div>
                             </v-list-item>
                             <!-- <p class="ml-4"><strong class="text-green">Correct Answer:</strong> {{ question.correctAnswer}} </p> -->
-                             <p class="ml-4"><strong class="text-green">Correct Answer:</strong> {{ question.options[Number(question.correctAnswer)]}} </p>
-                        
+                            <div class="d-flex ma-2 justify-space-between">
+                              <v-select
+                                v-if="Number(editIndexValue) === indexMain"
+                                v-model="editedCorrectAnswer"
+                                label="Correct Answer"
+                                :items="question.options.map((opt, idx) => ({ title: opt, value: idx }))"
+                                item-title="title"
+                                item-value="value"
+                              >
+                                
+                              </v-select>
+                              <p class="ml-4" v-else><strong class="text-green">Correct Answer:</strong> {{ question.options[Number(question.correctAnswer)]}} </p>
+                              <button v-if="editIndexValue === -1" @click="editQuestion(indexMain)" class="ml-2 text-brown">
+                               edit question 📝
+                                </button>
+                              <button v-if="Number(editIndexValue) === indexMain" @click="saveEditQuestion(indexMain)" class="ml-2 text-brown">
+                               save ✅
+                                </button>
+                            </div>
                         
                         </v-list>
-                        <p v-else class="ml-4"><strong>Correct Answer:</strong> {{ question.correctAnswer }}</p>
+                        <div v-else class="d-flex ma-2 justify-space-between">
+                          <v-text-field class="ml-4" v-if="Number(editIndexValue) === indexMain" :placeholder="question.correctAnswer " v-model="editedClozeQuestonCorrectAnswerValue" :details="false" variant="plain" density="compact" >
+                            Correct Answer: 
+                          </v-text-field>
+                          <p v-else class="ml-4"><strong>Correct Answer:</strong> {{ question.correctAnswer }}</p>
+                          <button v-if="editIndexValue === -1" @click="editQuestion(indexMain)" class="ml-2 text-brown">
+                            edit question 📝
+                          </button>
+                          <button v-if="Number(editIndexValue) === indexMain" @click="saveEditQuestion(indexMain)" class="ml-2 text-brown">
+                            save ✅
+                          </button>
+                        </div>
+
                         </div>
                     </div>
                     <v-card-actions>
@@ -193,6 +228,7 @@ const servingMCQuestions = ref(false)
 
 const selectedOption = ref(null)
 const loading = ref(false)
+const isSaveQuestions = ref(false)
 
 // add these separately to the data object
 const quizLevel=ref('')
@@ -210,6 +246,16 @@ const questions=ref([])
  const churches = ref([])
  
  const levelNames= ref([])
+
+//  editing variable names
+const editedQuestionValue = ref('')
+const editedReferenceValue = ref('')
+const editedCorrectAnswer = ref('')
+const editedClozeQuestonCorrectAnswerValue = ref('')
+const editedOptionValues = ref({})
+const editedOptionIndex = ref(-1)
+
+const editIndexValue = ref(-1)
 
 const alphabetLabel = (index) => String.fromCharCode(65 + index)
 
@@ -229,14 +275,60 @@ const removeOption = (index) => {
   options.value.splice(index, 1)
 }
 
+const editQuestion = (index) =>{
+  editIndexValue.value=index;
+  console.log(questions.value)
+}
+const saveEditQuestion = (questionIndex) => {
+  const question = questions.value[questionIndex]
+
+  // Save question text if edited
+  if (editedQuestionValue.value) {
+    question.question = editedQuestionValue.value
+  }
+
+  // Save reference if edited
+  if (editedReferenceValue.value) {
+    question.reference = editedReferenceValue.value
+  }
+
+  // Save reference if edited
+if (question.type === 'mc') {
+  if (editedCorrectAnswer.value !== null && editedCorrectAnswer.value !== undefined) {
+    question.correctAnswer = editedCorrectAnswer.value
+  }
+} else {
+  if (editedClozeQuestonCorrectAnswerValue.value) {
+    question.correctAnswer = editedClozeQuestonCorrectAnswerValue.value
+  }
+}
+
+  // Save edited options
+  for (let i = 0; i < question.options.length; i++) {
+    const key = `${questionIndex}-${i}`
+    if (editedOptionValues.value[key] !== undefined && editedOptionValues.value[key] !== '') {
+      question.options[i] = editedOptionValues.value[key]
+    }
+  }
+
+  // Reset edit state
+  editIndexValue.value = -1
+  editedQuestionValue.value = ''
+  editedReferenceValue.value = ''
+
+  console.log(questions.value)
+}
+
+
+
 const openPreview = ref(false)
 
 const toast = useToast()
 const saveQuestion = ()=>{
-    loading.value=true
+    isSaveQuestions.value=true
     if(selectedOption.value === null){
         toast.error('indicate the correct answer from your options')
-        loading.value=false
+        isSaveQuestions.value=false
     }else{
       if(type.value === 'mc'){
       openPreview.value = true;
@@ -247,18 +339,9 @@ const saveQuestion = ()=>{
           openPreview.value = true;
           questions.value.push({question:question.value, type:type.value, reference:reference.value, correctAnswer:correctAnswer.value})
           servingMCQuestions.value = false
-
-
     }
-//     const { valid } = formRef.value.validate()
-//  if (valid) {
-//     console.log('Form valid!')
-//     // optionally reset validation
-//     formRef.value.resetValidation()
-//   }
     resetInputs()
-    }
-   
+    } 
 }
 
 const formRef=ref(null)
@@ -271,7 +354,7 @@ const resetInputs = () => {
   selectedOption.value = ''
   reference.value = ''
   correctAnswer.value = ''
-    loading.value=false
+    isSaveQuestions.value=false
   formRef.value?.resetValidation()
 }
 
@@ -286,7 +369,7 @@ const submitAllQuestions = async () => {
     if(servingMCQuestions.value === true){
        const response = await axios.post(`${prod}human_create_mc_questions`,data)
         questions.value = [] // clear after successful submit
-        toast.success(response.data.message,{timeout:4000})
+        response.data.status == 403 ? toast.error(response.data.message,{timeout:4000}):toast.success(response.data.message,{timeout:4000})
         loading.value=false
     }else{
         const response = await axios.post(`${prod}human_create_cloze_questions`, data)
@@ -415,3 +498,10 @@ watch(
 )
 
 </script>
+<style scoped>
+.v-field__input::placeholder{
+  font-size: 180x !important;
+  font-weight: 300 !important; 
+  color: rgba(0, 0, 0, 0.6);
+}
+</style>
