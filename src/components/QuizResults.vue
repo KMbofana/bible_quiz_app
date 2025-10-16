@@ -91,7 +91,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { prod } from "../../api";
+import axios from "axios";
+import { computed, onMounted } from "vue";
+import { useAuthStore } from "../stores/auth";
+import { useQuestionsStore } from "../stores/questions";
 
 const props = defineProps({
   score: { type: Number, required: true },
@@ -99,7 +103,9 @@ const props = defineProps({
   answers: { type: Array, required: true },
   questions: { type: Array, required: true },
 });
-
+const authStore = useAuthStore()
+const questionStore = useQuestionsStore()
+const userEmail = computed(()=> authStore.userEmail)
 const emit = defineEmits(["restart"]);
 
 const percentage = computed(() =>
@@ -130,10 +136,57 @@ const isCorrect = (index) => {
   return userAnswer === Number(props.questions[index].correctAnswer);
 };
 
+const userAnswerToDD = ref(null)
+
 const getUserAnswerText = (index) => {
   const userAnswer = props.answers[index];
+  userAnswerToDD.value = userAnswer
   return userAnswer !== null
     ? props.questions[index].options[userAnswer]
     : "No answer";
 };
+
+
+onMounted(()=>{
+  matchAnswersToQuestionsAndSaveToDB()
+})
+const userResults = ref({});
+
+const matchAnswersToQuestionsAndSaveToDB = ()=>{
+
+  try {
+    const score = props.score
+const totalQuestions = props.totalQuestions
+const userResponse = [];
+
+props.questions.forEach((question)=>{
+  userResponse.push({
+    question: question.question,
+    options: question.options,
+    reference: question.reference,
+    userAnswer: userAnswerToDD.value // Make sure this is capturing the correct answer per question
+  });
+})
+
+userResults.value = {
+  user:userEmail.value,
+  questionsID:questionStore.questionID,
+  userResponse,
+  score,
+  totalQuestions
+}
+
+  axios.post(`${prod}questions/save_mc_answers`, userResults.value)
+  .then((result) => {
+    console.log(result)
+   
+  }).catch((err) => {
+    console.log(err)    
+  });
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
 </script>

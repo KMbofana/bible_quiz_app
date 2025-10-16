@@ -102,6 +102,7 @@ import { useToast } from 'vue-toastification'
 import {useQuizTimer} from '../stores/quiztimer'
 
 import {useAuthStore} from "../stores/auth"
+import { useQuestionsStore } from '../stores/questions'
 
 const quizStore = useQuizStore()
 const data = ref([])
@@ -109,10 +110,12 @@ const data = ref([])
 const toast = useToast()
 const authStore = useAuthStore()
 const quiztimer = useQuizTimer()
+const questionStore = useQuestionsStore()
 
 onMounted(async () => {
 
   try {
+     questionStore.resetQuestionID()
     const result = await axios.get(`${prod}questions/student_view_mc_questions`, {
       params: {
         quizLevel: quizStore.quizLevel,
@@ -125,7 +128,8 @@ onMounted(async () => {
    }else{
      console.log(result)
     data.value = result.data.questions[0].questions
-    console.log('Data loaded:', result.data.questions[0].questions)
+    questionStore.getQuestionID(result.data.questions[0]._id)
+    console.log('question id:', result.data.questions[0]._id)
    }
   } catch (error) {
     console.error('Failed to load:', error)

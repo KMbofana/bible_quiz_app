@@ -51,7 +51,7 @@ const userLogin = async(req,res)=>{
                if(!result){
                  res.status(403).json({message:'wrong password', result})
                }else{
-                const token = webToken.sign({role:user.role, district:user.district, exp:Math.floor(Date.now() / 1000) + (60 * 60)},'logintoken')
+                const token = webToken.sign({role:user.role,email:user.email, district:user.district, exp:Math.floor(Date.now() / 1000) + (60 * 60)},'logintoken')
                 res.status(200).json({message:`Welcome ${user.firstname}`, result, token})
                }
             }

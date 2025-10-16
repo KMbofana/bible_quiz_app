@@ -1,5 +1,6 @@
 const clozequestions = require('../models/clozequestions');
 const mcquestions = require('../models/mcquestions');
+const userResults = require('../models/userResults');
 
 const saveClozeQuestions = async (req, res) => {    
    
@@ -64,10 +65,52 @@ const studentViewMCQuestions = async(req, res) =>{
     }
 }
 
+const saveUserMCResults = async (req, res) =>{
+    try {
+        const {user,questionsID, userResponse, score, totalQuestions} = req.body
+
+    const result = await userResults.findOne({questionsID});
+        console.log(!result)
+    if(!result){
+        
+        userResults.create({
+            user, 
+            questionsID,
+            questions:userResponse, 
+            score, 
+            totalQuestions
+        })
+        .then((result) => {
+            res.status(201).json({message:"user response save successfully"})
+            
+        }).catch((err) => {
+            console.log(err)
+             res.status(500).json({message:"failed to save user responses"})
+        });   
+    }else{
+        console.log(user,questionsID, score, totalQuestions)
+        userResults.updateOne({ 
+            questionsID: questionsID },  
+            { $set: { questions: userResponse, score } })
+            .then((result) => {
+                res.status(201).json({message:'update was successful'})
+            }).catch((err) => {
+                console.log(err)
+            });
+    }
+    } catch (error) {
+       console.log(error) 
+       res.status(500).json({error})
+    }
+    
+}
+
+
 
 module.exports = {
     saveClozeQuestions,
     saveMCQuestions,
     studentViewClozeQuestions,
-    studentViewMCQuestions
+    studentViewMCQuestions,
+    saveUserMCResults
 }

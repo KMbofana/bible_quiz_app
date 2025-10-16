@@ -11,11 +11,12 @@ export const useAuthStore = defineStore('auth', {
   getters: {
     isAuthenticated: (state) => !!state.token,
     userRole: (state) => state.role,
-    userDistrict:(state) => state.district
+    userDistrict:(state) => state.district,
+    userEmail:(state) => state.user
   },
 
   actions: {
-    userLogin(role, district,token,user = null) {
+    userLogin(role, district,token,user) {
       this.role = role      // e.g., "admin" or "basic"
       this.token = token
       this.user = user

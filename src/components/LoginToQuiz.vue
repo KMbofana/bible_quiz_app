@@ -88,11 +88,11 @@ const authStore = useAuthStore()
             const decoded = jwtDecode(result.data.token)
                 console.log(decoded.role)
                 if(decoded.role ==="user"){
-                  authStore.userLogin(decoded.role, decoded.district,result.data.token)
+                  authStore.userLogin(decoded.role, decoded.district,result.data.token, decoded.email)
                 //   console.log(decoded.district)
                     route.push('/student_portal')
                 }else{
-                  authStore.userLogin(decoded.role,decoded.district, result.data.token)
+                  authStore.userLogin(decoded.role,decoded.district, result.data.token, decoded.email)
                     route.push('/create_questions')
                 }
             

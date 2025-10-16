@@ -34,5 +34,6 @@ router.get('/api/orgunits/get_branch_name/:branchname',orgStructureController.fi
 // student view questions
 router.get('/api/questions/student_view_cloze_questions', questionsController.studentViewClozeQuestions)
 router.get('/api/questions/student_view_mc_questions', questionsController.studentViewMCQuestions)
+router.post('/api/questions/save_mc_answers', questionsController.saveUserMCResults)
 
 module.exports = router
