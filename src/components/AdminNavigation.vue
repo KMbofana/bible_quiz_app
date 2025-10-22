@@ -22,9 +22,9 @@
                                 <v-list-item-title >Add Organizations Units</v-list-item-title>
                             </v-list-item>
                         </RouterLink>
-                        <RouterLink class="redirectLink" to="/">
+                        <RouterLink class="redirectLink" to="/auto_generate_questions">
                             <v-list-item >
-                                <v-list-item-title>Profile</v-list-item-title>
+                                <v-list-item-title>Auto Generate Questions</v-list-item-title>
                             </v-list-item>
                         </RouterLink>
                         <RouterLink class="redirectLink" to="/">

@@ -4,6 +4,7 @@ const router = express.Router()
 const usersController = require('../controllers/usersController')
 const questionsController = require('../controllers/questions')
 const orgStructureController = require('../controllers/orgStructureController')
+const aiQuestions = require('../controllers/aiQuestions')
 
 router.get('/', (req, res)=>{
     console.log('app backend')
@@ -35,5 +36,13 @@ router.get('/api/orgunits/get_branch_name/:branchname',orgStructureController.fi
 router.get('/api/questions/student_view_cloze_questions', questionsController.studentViewClozeQuestions)
 router.get('/api/questions/student_view_mc_questions', questionsController.studentViewMCQuestions)
 router.post('/api/questions/save_mc_answers', questionsController.saveUserMCResults)
+
+
+//ai generate qustions
+router.post('/api/questions/admin_generate_ai_mc_questions', aiQuestions.saveMCQuestionsToMongo)
+router.post('/api/questions/admin_generate_ai_cloze_questions', aiQuestions.saveClozeQuestionsToMongo)
+
+router.post('/api/questions/student_practice_ai_mc_questions', aiQuestions.serveMCQuestionsToStudents)
+router.post('/api/questions/student_practice_ai_cloze_questions', aiQuestions.serveClozeQuestionsToStudents)
 
 module.exports = router

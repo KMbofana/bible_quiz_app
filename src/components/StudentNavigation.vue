@@ -11,7 +11,7 @@
                                 <v-list-item-title >Take Quiz</v-list-item-title>
                             </v-list-item>
                         </RouterLink>
-                        <RouterLink class="redirectLink" to="/human_mc_questions">
+                        <RouterLink class="redirectLink" to="/practice_quiz">
                             <v-list-item >
                                 <v-list-item-title>Practice</v-list-item-title>
                             </v-list-item>
