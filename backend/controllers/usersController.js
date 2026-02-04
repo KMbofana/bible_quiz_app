@@ -95,9 +95,9 @@ const registrarLogin = async(req,res)=>{
     }else{
         // get hashed password
         // console.log(user)
-        const storedPassword = user.password
+        // const storedPassword = user.password
         // compare passwords
-        bcrypt.compare(password, storedPassword, (err, result)=>{
+        bcrypt.compare(password, user.password, (err, result)=>{
             if(err){
                 res.status(403).json({message:'error occured please try again', error:err})
             }else{

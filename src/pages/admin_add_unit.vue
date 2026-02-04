@@ -5,7 +5,7 @@
 {
   "meta": {
     "requiresAuth": true,
-    "roles": ["admin"]
+    "roles": ["admin", "registrar"]
   }
 }
 </route>

@@ -1,6 +1,7 @@
 <template>
   
-    <AdminNavigation />
+    <AdminNavigation v-if="role ==='admin'"/>
+    <RegistrarNavigation v-else />
       <v-container class="pa-8">
       <v-card class="pa-6">
                <div class=" d-flex justify-center">
@@ -448,9 +449,11 @@ import axios from "axios";
 import {prod} from "../../api";
 import { useToast } from "vue-toastification";
 import { shallowRef } from 'vue';
-
+import {useAuthStore} from "../stores/auth"
 
 const open = shallowRef(true)
+const authStore = useAuthStore();
+const role = computed(() => authStore.userRole)
 
 const toast = useToast();
 const loading = ref(false)
@@ -619,8 +622,35 @@ const loading = ref(false)
   districtName.value,
   churchName.value
 ]
-    const save = () => {
-        loading.value = true
+
+const resetFormFields = () => {
+  try {
+        divisionName.value = ""
+        unionName.value = ""
+        conferenceName.value = ""
+        federationName.value = ""
+        districtName.value = ""
+        churchName.value = ""
+        selectedType.value = ""
+        selectedParentId.value = ""
+
+
+        // close open modals
+         union.value = false
+         conference.value = false
+         federation.value = false
+         district.value = false
+         church.value = false
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+    const save = async () => {
+      try {
+          loading.value = true
        const data = {
             name:divisionName.value ||
                 unionName.value ||
@@ -632,14 +662,15 @@ const loading = ref(false)
             parentId: selectedParentId.value || null
         }
 
-        axios.post(`${prod}orgunits/add_each_unit`,data)
-        .then((result) => {
-            console.log(result)
-            loading.value=false
-            toast.success('organization unit save successfully!', {timeout:4000})
-        }).catch((err) => {
-            console.log(err)            
-        });
+          await axios.post(`${prod}orgunits/add_each_unit`,data)
+          loading.value=false
+          toast.success('organization unit save successfully!', {timeout:4000})
+          resetFormFields();
+      } catch (error) {
+        resetFormFields();
+        console.log(error)
+        toast.error(error)
+      }
       
     }
 

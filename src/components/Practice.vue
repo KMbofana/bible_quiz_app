@@ -24,6 +24,16 @@
                         ></v-select>
                     </v-responsive>
                     <v-responsive>
+                        <v-select 
+                            label="Number of Questions"
+                            :items="[15, 20, 25]"
+                            v-model="numberOfQuestions"
+                            required
+                        >
+
+                        </v-select>
+                    </v-responsive>
+                    <v-responsive>
                         <v-btn variant="flat" type="submit" :loading="isGettingQuestions" color="rgb(154, 63, 63)" block="">
                             Get Questions
                         </v-btn>
@@ -90,12 +100,14 @@ import {useQuizTimer} from '../stores/quiztimer'
 
   const quiztimer = useQuizTimer()
   const isGettingQuestions = ref(false)
-  const quizGenerated = ref(false)
+  const numberOfQuestions = ref(0)
+  
 
   const getQuestions = async () =>{
       isGettingQuestions.value = true
       const reqData = {
-          bookName:selected.value.join()
+          bookName:selected.value.join(),
+          numberOfQuestions:numberOfQuestions.value
         }
    await axios.post(`${prod}questions/student_practice_ai_mc_questions`,reqData)
    .then((result) => {

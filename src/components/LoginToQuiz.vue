@@ -119,8 +119,9 @@ const authStore = useAuthStore()
         }
 
         const loginResult = await axios.post(`${prod}registrar_login`, data)
-        
-        console.log(loginResult)
+        const decoded = jwtDecode(loginResult.data.token)
+        authStore.userLogin(decoded.role, "default",loginResult.data.token, "registra@gmail.com")
+        console.log(decoded)
         console.log(loginResult.data)
         console.log(loginResult.data.status)
 

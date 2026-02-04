@@ -12,7 +12,7 @@
                                 <v-list-item-title>Dashboard</v-list-item-title>
                             </v-list-item>
                         </RouterLink>
-                        <RouterLink class="redirectLink" to="/create_sys_users">
+                        <RouterLink class="redirectLink" to="/registrar_create_accounts">
                             <v-list-item >
                                 <v-list-item-title >Create System Users</v-list-item-title>
                             </v-list-item>

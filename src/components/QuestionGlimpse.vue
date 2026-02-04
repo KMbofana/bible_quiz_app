@@ -31,20 +31,13 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 
-const questionSets = ref([]);
+// const questionSets = ref([]);
 const loading = ref(true);
+const props = defineProps({
+    questionSets:{type: Array, required:true}
+})
 
-onMounted(async () => {
-  try {
-    // Call your backend API endpoint (Express + Mongo)
-    const res = await axios.get("/api/cloze-recent"); // 👈 Your backend route
-    questionSets.value = res.data.slice(0, 5); // show only a glimpse
-  } catch (err) {
-    console.error(err);
-  } finally {
-    loading.value = false;
-  }
-});
+
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
     <AdminNavigation />
-    <v-container>
+    <v-container class="position-relative">
         <v-row>
             <v-col cols="12">
                 <v-form @submit.prevent="generateQuestions">
@@ -47,7 +47,25 @@
             
                 </v-responsive>
                 <v-responsive>
-                    <v-textarea v-model="bookNames" >
+                    <v-autocomplete :items="[
+                      'Great Controvesy', 
+                      'Messages To Young People', 
+                      'Daniel and Revelations', 
+                      'Desire of Ages', 
+                      'Steps to Christ', 
+                      'Patriachs and Prophets',
+                      'Prophets and Kings',
+                      'Bible'
+                      ]"
+                      label="Book Name"
+                      class="ml-4 mr-4 pb-4"
+                      v-model="bookNames"
+                      >
+
+                    </v-autocomplete>
+                </v-responsive>
+                <v-responsive>
+                    <v-textarea class="ml-4 mr-4 pb-4" v-model="instruction" label="instruction">
 
                     </v-textarea>
                 </v-responsive>
@@ -57,6 +75,83 @@
             </v-form>
             </v-col>
         </v-row>
+       <v-dialog :model-value="dialog">
+          <v-card>
+            <v-card-title class="text-center">Preview Questions</v-card-title>
+            <v-card-text>
+              <div v-for="question, indexMain in DataQuestions">
+                        <div class="border-solid border-2 rounded ml-4 mr-4 mb-4">
+                            <div class="d-flex ga-2">
+                              <v-text-field class="ml-4" v-if="Number(editIndexValue) === indexMain" v-model="editedQuestionValue" :placeholder="question.question" hide-details variant="plain" density="compact" @update:model-value="val => {editedQuestionValue = val} "></v-text-field> <h3 v-else class="ml-4 mt-1">Question {{ indexMain +1 }}: {{ question.question }}</h3> 
+                            </div>
+                        <div class="d-flex ga-2">
+                          <v-text-field class="ml-4" v-if="Number(editIndexValue) === indexMain" :placeholder="question.reference " v-model="editedReferenceValue" :details="false" variant="plain" density="compact" >
+                            reference: 
+                          </v-text-field>
+                          <p v-else class="ml-4 opacity-0.2 mt-2">reference: {{question.reference}}</p>
+                        </div>
+                        <v-list v-if="question.options">
+                            <v-list-item
+                                v-for="(option, index) in question.options"
+                                :key="index"
+                                
+                            >
+                             <div class="d-flex ga-2">
+                                 <strong :class="editIndexValue === indexMain ? '' : 'mt-2'">{{ alphabetLabel(index) }}.</strong>
+                                    <v-text-field v-if="Number(editIndexValue) === indexMain" :key="index" max-width="300px" v-model="editedOptionValues[`${indexMain}-${index}`]" @update:model-value="val =>  editedOptionIndex = index"  variant="plain" density="compact" :placeholder="option"></v-text-field>
+                                  <p v-else>{{ option }}</p>
+                                  </div>
+                            </v-list-item>
+                            <!-- <p class="ml-4"><strong class="text-green">Correct Answer:</strong> {{ question.correctAnswer}} </p> -->
+                            <div class="d-flex ma-2 justify-space-between">
+                              <v-select
+                                v-if="Number(editIndexValue) === indexMain"
+                                v-model="editedCorrectAnswer"
+                                label="Correct Answer"
+                                :items="question.options.map((opt, idx) => ({ title: opt, value: idx }))"
+                                item-title="title"
+                                item-value="value"
+                              >
+                                
+                              </v-select>
+                              <p class="ml-4" v-else><strong class="text-green">Correct Answer:</strong> {{ question.options[Number(question.correctAnswer)]}} </p>
+                              <button v-if="editIndexValue === -1" @click="editQuestion(indexMain)" class="ml-2 text-brown">
+                               edit question 📝
+                                </button>
+                              <button v-if="Number(editIndexValue) === indexMain" @click="saveEditQuestion(indexMain)" class="ml-2 text-brown">
+                               save ✅
+                                </button>
+                            </div>
+                        
+                        </v-list>
+                        <div v-else class="d-flex ma-2 justify-space-between">
+                          <v-text-field class="ml-4" v-if="Number(editIndexValue) === indexMain" :placeholder="question.correctAnswer " v-model="editedClozeQuestonCorrectAnswerValue" :details="false" variant="plain" density="compact" >
+                            Correct Answer: 
+                          </v-text-field>
+                          <p v-else class="ml-4"><strong>Correct Answer:</strong> {{ question.correctAnswer }}</p>
+                          <button v-if="editIndexValue === -1" @click="editQuestion(indexMain)" class="ml-2 text-brown">
+                            edit question 📝
+                          </button>
+                          <button v-if="Number(editIndexValue) === indexMain" @click="saveEditQuestion(indexMain)" class="ml-2 text-brown">
+                            save ✅
+                          </button>
+                        </div>
+
+                        </div>
+                    </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-row>
+                <v-col>
+                  <v-btn color="rgb(154, 63, 63)" variant="flat" @click="regenerateQustions" :loading="regeneratingQuestions" block>Regenerate</v-btn>
+                </v-col>
+                <v-col>
+                  <v-btn color="error" variant="flat" @click="closeDialog" block>Close</v-btn>
+                </v-col>
+              </v-row>
+            </v-card-actions>
+          </v-card>
+       </v-dialog>
     </v-container>
 </template>
 
@@ -65,17 +160,28 @@ import {ref} from "vue"
 import axios from "axios"
 import { prod } from '../../api';
 import { useToast } from 'vue-toastification';
+import { useQuizStore } from '../stores/quizLevel'
+import {useAuthStore} from "../stores/auth"
+import { useQuestionsStore } from '../stores/questions'
+
+const quizStore = useQuizStore()
+const DataQuestions = ref([])
+
+
+const authStore = useAuthStore()
+const questionStore = useQuestionsStore()
 
 const toast = useToast()
 
 const quizLevel = ref('')
 const bookNames = ref('')
 const levelName = ref('')
+const instruction = ref('')
 const type = ref('')
 const numberOfQuestions = ref(0)
 
 const isGenerating = ref(false)
-
+const dialog = ref(false)
 
 //populating level arrays
  const divisions = ref([])
@@ -87,36 +193,71 @@ const isGenerating = ref(false)
 
 const levelNames = ref([])
 
+const savingQuestions = ref(false)
+const regeneratingQuestions = ref(false)
+const regenerate = ref(false);
+
+const closeDialog = ()=>{
+  try {
+    dialog.value = false;
+  } catch (error) {
+    consoleError.log(error)
+  }
+}
+const regenerateQustions = ()=>{
+  regeneratingQuestions.value = true;
+  try {
+    regeneratingQuestions.value = false;
+    dialog.value = false;
+    regenerate.value = true
+    generateQuestions()
+  } catch (error) {
+    consoleError.log(error)
+  }
+}
+
+const alphabetLabel = (index) => String.fromCharCode(65 + index)
 const generateQuestions = async () =>{
     isGenerating.value= true
     const data = {
         level:quizLevel.value,
         levelName:levelName.value,
         bookName:bookNames.value,
-        numberOfQuestions:numberOfQuestions.value
+        numberOfQuestions:numberOfQuestions.value,
+        instruction:instruction.value,
+        regenerate:regenerate.value
     }
     if(type.value === "mc"){
-        console.log("inside mc")
-        await axios.post(`${prod}questions/admin_generate_ai_mc_questions`,data)
-        .then((result) => {
+       try {
+           console.log("inside mc")
+        const result = await axios.post(`${prod}questions/admin_generate_ai_mc_questions`,data);
             toast.success('questions generated succefully', 4000)
+            console.log(result.data.questionSet)
+            DataQuestions.value = result.data.questions
             isGenerating.value= false
-        }).catch((err) => {
-            console.log(err)
-            toast.error('error generating questions', 4000)
-            isGenerating.value= false
-        });
+            dialog.value= true
+        
+       } catch (error) {
+        isGenerating.value= false
+        dialog.value= false
+        if(error.status === 403) toast.error(error.response.data.message);
+        toast.error('error generating questions')
+       }
     }else{
-        console.log("inside cloze")
-        await axios.post(`${prod}questions/admin_generate_ai_cloze_questions`,data)
-        .then((result) => {
-            toast.success('questions generated succefully', 4000)
+        try {
+          console.log("inside cloze")
+          const result = await axios.post(`${prod}questions/admin_generate_ai_cloze_questions`,data)
+          toast.success('questions generated succefully', 4000)
             isGenerating.value= false
-        }).catch((err) => {
-            console.log(err)
+            dialog.value= true
+             DataQuestions.value = result.data.questions
+        } catch (error) {
+           console.log(error)
+            if(error.status === 403) toast.error(error.response.data.message);
             toast.error('error generating questions', 4000)
             isGenerating.value= false
-        });
+            dialog.value= false
+        }
     }
 }
 

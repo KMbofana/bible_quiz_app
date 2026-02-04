@@ -5,6 +5,7 @@ const usersController = require('../controllers/usersController')
 const questionsController = require('../controllers/questions')
 const orgStructureController = require('../controllers/orgStructureController')
 const aiQuestions = require('../controllers/aiQuestions')
+const emailController = require('../controllers/emailController')
 
 router.get('/', (req, res)=>{
     console.log('app backend')
@@ -44,5 +45,6 @@ router.post('/api/questions/admin_generate_ai_cloze_questions', aiQuestions.save
 
 router.post('/api/questions/student_practice_ai_mc_questions', aiQuestions.serveMCQuestionsToStudents)
 router.post('/api/questions/student_practice_ai_cloze_questions', aiQuestions.serveClozeQuestionsToStudents)
+router.post('/api/emails', emailController.sendEmail)
 
 module.exports = router

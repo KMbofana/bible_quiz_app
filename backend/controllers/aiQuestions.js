@@ -56,7 +56,7 @@ const MCQuestionSetSchemaJSON = {
 
 
 //generate the questions
-const generateMCQuestions = async (level, levelName, bookName, numberOfQuestions) => {
+const generateMCQuestions = async (level, levelName, bookName, numberOfQuestions, instruction) => {
    try {
      
     const response = await openai.chat.completions.create({
@@ -64,11 +64,11 @@ const generateMCQuestions = async (level, levelName, bookName, numberOfQuestions
     messages: [
       {
         role: "system",
-        content: `You are a quiz generator that produces Multiple Choice question sets of ${numberOfQuestions} from the book(s) of ${bookName} in the bible in JSON format. Each question must have at least 4 options to choose answers from.`,
+        content: `You are a quiz generator that produces Multiple Choice question sets of ${numberOfQuestions} from the book(s) of ${bookName} in the bible in JSON format using this instruction ${instruction}. Each question must have at least 4 options to choose answers from.`,
       },
       {
         role: "user",
-        content: `Generate a Multiple choice question set from the book(s) of ${bookName}.`,
+        content: `Generate a Multiple choice question set of of ${{numberOfQuestions}} from the book(s) of ${bookName} using this instruction ${instruction}.`,
       },
     ],
       response_format: {
@@ -90,13 +90,20 @@ const generateMCQuestions = async (level, levelName, bookName, numberOfQuestions
 
 
 const saveMCQuestionsToMongo = async (req, res) => {
-
-const {level, levelName, bookName, numberOfQuestions} = req.body
-  const questionSet = await generateClozeQuestionSet(level, levelName, bookName, numberOfQuestions);
-  const saved = await aimcquestions.create(questionSet);
+const {level, levelName, bookName, numberOfQuestions, instruction, regenerate} = req.body
+if(regenerate) await aimcquestions.deleteOne({quizLevel:level, levelName}); 
+const quizExist = await aimcquestions.exists({quizLevel:level, levelName})
+console.log(!quizExist);
+  if(quizExist) return res.status(403).json({message:"quiz for this level is already set for this year!!"});
+  const questionSet = await generateMCQuestions(level, levelName, bookName, numberOfQuestions, instruction);
+  const saved = await aimcquestions.create({
+    quizLevel:level,
+    levelName,
+    questions:questionSet.questions
+  });
   console.log("Saved:", saved);
   if(saved){
-    res.status(200).json({questionSet})
+    res.status(200).json({questions: questionSet.questions})
   }else{
   res.status(500).json({error:"error"})
   }
@@ -138,7 +145,7 @@ const ClozeQuestionSetSchemaJSON = {
    strict: true,
 };
 
-const generateClozeQuestionSet = async (level, levelName, bookName, numberOfQuestions) => {
+const generateClozeQuestionSet = async (level, levelName, bookName, numberOfQuestions, instruction) => {
     try {
       
     const response = await openai.chat.completions.create({
@@ -146,11 +153,11 @@ const generateClozeQuestionSet = async (level, levelName, bookName, numberOfQues
     messages: [
       {
         role: "system",
-        content: `You are a quiz generator that produces AI Cloze question sets of ${numberOfQuestions} in JSON format from the book(s) of ${bookName} in the bible.`,
+        content: `You are a quiz generator that produces AI Cloze question sets of ${numberOfQuestions} in JSON format from the book(s) of ${bookName} in the bible using this instruction ${instruction}.`,
       },
       {
         role: "user",
-        content: `Generate a Cloze question set for ${level} difficulty.`,
+        content: `Generate a Cloze question set of ${{numberOfQuestions}} from the book(s) of ${bookName} using this instruction ${instruction}.`,
       },
     ],
     response_format: { type: "json_schema", json_schema: ClozeQuestionSetSchemaJSON },
@@ -164,16 +171,23 @@ const generateClozeQuestionSet = async (level, levelName, bookName, numberOfQues
     }
 }
 
-
 const saveClozeQuestionsToMongo = async (req, res) => {
-  const {level, levelName, bookName, numberOfQuestions} = req.body
-  const questionSet = await generateClozeQuestionSet(level, levelName, bookName, numberOfQuestions);
-  const saved = await aiclozequestions.create(questionSet);
-  console.log("Saved:", saved);
-   if(saved){
-    res.status(200).json({questionSet})
-  }else{
-  res.status(500).json({error:"error"})
+  try {
+    const {level, levelName, bookName, numberOfQuestions, instruction, regenerate} = req.body
+    if(regenerate) await aiclozequestions.deleteOne({quizLevel:level, levelName}); 
+    const quizExist = await aiclozequestions.exists({quizLevel:level, levelName})
+    console.log(!quizExist);
+    if(quizExist) return res.status(403).json({message:"quiz for this level is already set for this year!!"});
+    const questionSet = await generateClozeQuestionSet(level, levelName, bookName, numberOfQuestions, instruction);
+    await aiclozequestions.create({
+      quizLevel:level,
+      levelName,
+      questions:questionSet.questions
+    });
+    return res.status(200).json({questions:questionSet.questions})
+  }catch (error) {
+    console.log(error)
+    return res.status(500).json({error})
   }
 }
 
@@ -197,6 +211,8 @@ const serveClozeQuestionsToStudents = async (req,res) =>{
   res.status(500).json({error:"error"})
   }
 }
+
+
 
 module.exports = {
     serveMCQuestionsToStudents,
