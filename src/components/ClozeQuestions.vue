@@ -1,4 +1,36 @@
 <template>
+   <!-- Start Screen -->
+  <v-container
+    v-if="!quizStarted"
+    class="fill-height d-flex align-center justify-center"
+    fluid
+  >
+    <v-card
+      max-width="500"
+      elevation="3"
+      class="mx-auto text-center"
+      rounded="lg"
+    >
+      <v-card-title class="text-h4 justify-center">
+        📖 Bible Quiz - {{ quizStore.levelName }}
+      </v-card-title>
+      <v-card-text>
+        Test your knowledge of the Bible with {{ questions.length }}
+        multiple choice questions.
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          @click="startQuiz"
+          color="rgb(154, 63, 63)"
+          variant="flat"
+          size="large"
+          block
+        >
+          Start Quiz
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-container>
   <v-container class="py-6" max-width="800">
     <v-card elevation="2" rounded="lg" class="mx-auto">
       <v-card-text>
@@ -44,7 +76,7 @@
           dense
           border="left"
         >
-          {{ isCorrect ? '✅ Correct!' : `❌ Incorrect! Correct answer: ${currentQuestion.answer}` }}
+          {{ isCorrect ? '✅ Correct!' : `Incorrect! Correct answer: ${currentQuestion.answer}` }}
         </v-alert>
 
         <!-- Next / See Results Button -->
@@ -95,25 +127,39 @@
 
 <script setup>
 import { ref, computed,onMounted } from 'vue'
-import { useQuizStore } from '@/stores/quizLevel'
+import { useQuizStore } from '../stores/quizLevel'
 import axios from 'axios'
 import { prod } from '../../api';
+import {useAuthStore} from "../stores/auth"
+import { useToast } from 'vue-toastification';
+import {useQuizTimer} from '../stores/quiztimer'
 
 const quizStore = useQuizStore()
 const questions = ref([])
+const authStore = useAuthStore()
+const toast = useToast()
+const quiztimer = useQuizTimer()
+const quizStarted = ref(false)
 
 
 onMounted(async () => {
-
+console.log(quizStore.quizLevel,
+        authStore.userDistrict)
   try {
     const result = await axios.get(`${prod}questions/student_view_cloze_questions`, {
       params: {
         quizLevel: quizStore.quizLevel,
-        levelName: quizStore.name,
+        levelName: authStore.userDistrict,
+        year:new Date().getFullYear()
       },
     })
-    questions.value = result.data.questions[0].questions
-    console.log('Data loaded:', result.data.questions[0].questions[0])
+    console.log(!result.data.questions)
+    if(!result.data.questions){
+      return toast.error("no quiz set for this level")
+    }else{
+      questions.value = result.data.questions.questions
+      console.log('Data loaded:', result)
+    }
   } catch (error) {
     console.error('Failed to load:', error)
   }
@@ -150,6 +196,7 @@ const handleNext = () => {
   if (!showResult.value) return
   if (isLastQuestion.value) {
     quizCompleted.value = true
+    quiztimer.piniaEndQuiz()
   } else {
     currentQuestionIndex.value++
     userAnswer.value = ''
@@ -164,6 +211,8 @@ const restartQuiz = () => {
   showResult.value = false
   quizCompleted.value = false
   score.value = 0
+  quizStarted.value = false
+  quiztimer.piniaStartQuiz()
 }
 
 const getScoreMessage = () => {
@@ -173,4 +222,22 @@ const getScoreMessage = () => {
   if (percentage.value >= 60) return 'Not bad! Keep reading and learning! 📚'
   return 'Keep studying God\'s Word! Every step counts! 💪'
 }
+
+const startQuiz = () => { 
+  if(questions.value.length <= 0){
+    toast.error("no quiz set for this level")
+    return
+  }
+  quizStarted.value = true 
+  quiztimer.piniaStartQuiz()
+  console.log("initiating method",quiztimer.isQuizStarted)
+}
+
+watch(()=>quiztimer.quizFinished,
+(newVal)=> {
+     if (newVal) {
+      console.log("quiz ended due to time", newVal);
+      quizCompleted.value = true; // your local ref
+    }
+})
 </script>

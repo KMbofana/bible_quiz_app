@@ -6,7 +6,8 @@
                 <v-card>
                     <v-card-title class="text-h5">Quiz Programs</v-card-title>
                     <v-card-text>
-                        <p>Quiz levels are activate as you successfully enroll or qualify</p>
+                        <p>Select the level below</p>
+                        <i class="text-red">Please Note: Quiz levels are activate as you successfully enroll or qualify</i>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn color="primary" @click="handleQuizLevel('District')">District</v-btn>
@@ -19,7 +20,7 @@
                 </v-card>
                 <v-row class="mt-5">
                     <v-col cols="6">
-                        <v-card>
+                        <v-card v-if="quizStore.currentLevel">
                             <v-card-title>District - {{ `${authStore.userDistrict}` }}</v-card-title>
                             <v-card-subtitle class="text-red" v-if="quizStore.currentLevel">Attempting {{ quizStore.currentLevel }} Questions</v-card-subtitle>
                             <br/>

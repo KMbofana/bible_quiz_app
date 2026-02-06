@@ -13,8 +13,13 @@ const mcquestionSchema = new Schema({
 const mcQuestionSetSchema = new Schema({
     quizLevel:{type:String, required:true},
     levelName:{type:String, required:false},
-    questions:[mcquestionSchema]
-})
+    questions:[mcquestionSchema],
+    year:{type:mongoose.Schema.Types.Date, default:new Date().getFullYear()}
+},
+{
+    timestamps:true
+}
+)
 
 
 const MultipleChoiceQuestionSet = mongoose.model('MCQuestionSet', mcQuestionSetSchema)

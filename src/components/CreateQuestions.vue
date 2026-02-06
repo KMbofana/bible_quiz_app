@@ -3,7 +3,7 @@
     <v-container>
                 <!--  section to create mc questions-->
                 <v-card>
-                    <v-card-title>Create Multiple Choice Questions</v-card-title>
+                    <v-card-title>Create Quiz Questions</v-card-title>
                     <v-form @submit.prevent="saveQuestion" ref="formRef">
                         <div class="">
                              <v-responsive
@@ -326,11 +326,19 @@ const openPreview = ref(false)
 const toast = useToast()
 const saveQuestion = ()=>{
     isSaveQuestions.value=true
-    if(selectedOption.value === null){
-        toast.error('indicate the correct answer from your options')
-        isSaveQuestions.value=false
-    }else{
+    
       if(type.value === 'mc'){
+        console.log(selectedOption.value === null, options.value.length <= 0, options.value.length)
+        if(options.value.length <= 0) {
+          toast.error('please add optional answers to your multiple choice question')
+          isSaveQuestions.value=false
+          return
+        }
+        if(selectedOption.value === null){
+          toast.error('please indicate correct answer from the options')
+          isSaveQuestions.value=false
+          return
+        }
       openPreview.value = true;
       servingMCQuestions.value = true
       questions.value.push({question:question.value, type:type.value, reference:reference.value, options: [...options.value], correctAnswer:selectedOption.value})
@@ -341,7 +349,7 @@ const saveQuestion = ()=>{
           servingMCQuestions.value = false
     }
     resetInputs()
-    } 
+    
 }
 
 const formRef=ref(null)
@@ -379,6 +387,11 @@ const submitAllQuestions = async () => {
     }
 } catch (error) {
     console.error(error)
+    if(error.status === 409){
+      toast.error(error.response.data.message)
+      loading.value=false
+      return
+    }
     toast.error(error,{timeout:4000})
     loading.value=false
   }

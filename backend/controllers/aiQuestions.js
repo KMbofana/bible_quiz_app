@@ -1,5 +1,7 @@
 const aimcquestions = require('../models/aimcquestions')
 const aiclozequestions = require('../models/aiclozequestions')
+const clozequestions = require('../models/clozequestions');
+const mcquestions = require('../models/mcquestions');
 
 // console.log('api key', process.env.OPENAI_API_KEY )
 const OpenAI = require('openai');
@@ -53,7 +55,16 @@ const MCQuestionSetSchemaJSON = {
 };
 
 
-
+const compareDates = (quizDate) =>{
+  try {
+    const DateToday = new Date();
+    if(DateToday > quizDate){
+      return true;
+    }
+  } catch (error) {
+    return false
+  }
+}
 
 //generate the questions
 const generateMCQuestions = async (level, levelName, bookName, numberOfQuestions, instruction) => {
@@ -90,23 +101,51 @@ const generateMCQuestions = async (level, levelName, bookName, numberOfQuestions
 
 
 const saveMCQuestionsToMongo = async (req, res) => {
-const {level, levelName, bookName, numberOfQuestions, instruction, regenerate} = req.body
-if(regenerate) await aimcquestions.deleteOne({quizLevel:level, levelName}); 
-const quizExist = await aimcquestions.exists({quizLevel:level, levelName})
+
+try {
+  const {level, levelName, bookName, numberOfQuestions, instruction, regenerate} = req.body
+
+const currentYear = new Date().getFullYear();
+
+const humanMCQuestions = await mcquestions.findOne({
+      quizLevel:level,
+      levelName:levelName,
+      year: currentYear
+})
+
+if(humanMCQuestions){
+  return res.status(409).json({message:"Human Multiple Choice Questions Already Set"})
+}
+
+if(regenerate) {
+  await aimcquestions.deleteOne({
+    quizLevel:level, 
+    levelName, 
+    year: currentYear});
+ }
+
+const quizExist = await aimcquestions.findOne({
+      quizLevel: level,
+      levelName,
+      year: currentYear
+})
+
 console.log(!quizExist);
-  if(quizExist) return res.status(403).json({message:"quiz for this level is already set for this year!!"});
+  if(quizExist) return res.status(409).json({message:"quiz for this level is already set for this year!!"});
   const questionSet = await generateMCQuestions(level, levelName, bookName, numberOfQuestions, instruction);
-  const saved = await aimcquestions.create({
+  await aimcquestions.create({
     quizLevel:level,
     levelName,
     questions:questionSet.questions
   });
   console.log("Saved:", saved);
-  if(saved){
-    res.status(200).json({questions: questionSet.questions})
-  }else{
-  res.status(500).json({error:"error"})
-  }
+ 
+   return res.status(200).json({questions: questionSet.questions})
+
+  } catch (error) {
+  return res.status(500).json({error:"error"})
+}
+  
 }
 
 //cloze questions logic
@@ -173,23 +212,80 @@ const generateClozeQuestionSet = async (level, levelName, bookName, numberOfQues
 
 const saveClozeQuestionsToMongo = async (req, res) => {
   try {
-    const {level, levelName, bookName, numberOfQuestions, instruction, regenerate} = req.body
-    if(regenerate) await aiclozequestions.deleteOne({quizLevel:level, levelName}); 
-    const quizExist = await aiclozequestions.exists({quizLevel:level, levelName})
-    console.log(!quizExist);
-    if(quizExist) return res.status(403).json({message:"quiz for this level is already set for this year!!"});
-    const questionSet = await generateClozeQuestionSet(level, levelName, bookName, numberOfQuestions, instruction);
-    await aiclozequestions.create({
-      quizLevel:level,
+    const {
+      level,
       levelName,
-      questions:questionSet.questions
+      bookName,
+      numberOfQuestions,
+      instruction,
+      regenerate
+    } = req.body;
+
+    const checkAiQuestions = await aimcquestions.findOne({
+       quizLevel:level,
+       levelName:levelName,
+       year: currentYear
+    })
+
+    if(checkAiQuestions){
+      return res.status(409).json({message:"AI generated questions already generated!"})
+    }
+
+    const manualQuestionSet = await clozequestions.findOne({
+       quizLevel:level,
+       levelName:levelName,
+       year: currentYear
+    })
+
+    if(manualQuestionSet){
+      return res.status(409).json({message:"Human Generated Questions Were Already Set!!"})
+    }
+
+    const currentYear = new Date().getFullYear();
+
+    if (regenerate) {
+      await aiclozequestions.deleteOne({
+        quizLevel: level,
+        levelName,
+        year: currentYear
+      });
+    }
+
+    const quizExist = await aiclozequestions.findOne({
+      quizLevel: level,
+      levelName,
+      year: currentYear
     });
-    return res.status(200).json({questions:questionSet.questions})
-  }catch (error) {
-    console.log(error)
-    return res.status(500).json({error})
+
+    if (quizExist) {
+      return res.status(409).json({
+        message: "Quiz for this level already exists this year"
+      });
+    }
+
+    const questionSet = await generateClozeQuestionSet(
+      level,
+      levelName,
+      bookName,
+      numberOfQuestions,
+      instruction
+    );
+
+    await aiclozequestions.create({
+      quizLevel: level,
+      levelName,
+      questions: questionSet.questions,
+      year: currentYear
+    });
+
+    return res.status(200).json({ questions: questionSet.questions });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
-}
+};
+
 
 const serveMCQuestionsToStudents = async(req,res) =>{
 const {level, levelName, bookName, numberOfQuestions} = req.body
@@ -218,5 +314,6 @@ module.exports = {
     serveMCQuestionsToStudents,
     serveClozeQuestionsToStudents,
     saveMCQuestionsToMongo,
-    saveClozeQuestionsToMongo
+    saveClozeQuestionsToMongo,
+    compareDates
 }

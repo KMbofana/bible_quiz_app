@@ -13,8 +13,15 @@ const aimcquestionSchema = new Schema({
 const aimcQuestionSetSchema = new Schema({
     quizLevel:{type:String, required:true},
     levelName:{type:String, required:false},
-    questions:[aimcquestionSchema]
-})
+    questions:[aimcquestionSchema],
+    year:{type: Number,
+    required: true,
+    default: () => new Date().getFullYear()}
+},
+{
+    timestamps:true
+}
+)
 
 
 const aiMultipleChoiceQuestionSet = mongoose.model('aiMCQuestionSet', aimcQuestionSetSchema)

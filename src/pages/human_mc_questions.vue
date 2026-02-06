@@ -120,6 +120,7 @@ onMounted(async () => {
       params: {
         quizLevel: quizStore.quizLevel,
         levelName: authStore.userDistrict,
+        year:new Date().getFullYear()
       },
     })
     console.log(result.data)
@@ -149,6 +150,10 @@ const isLastQuestion = computed(() => currentQuestionIndex.value === data.value.
 
 
 const startQuiz = () => { 
+   if(data.value.length <= 0){
+    toast.error("no quiz set for this level")
+    return
+  }
   quizStarted.value = true 
   quiztimer.piniaStartQuiz()
   console.log("initiating method",quiztimer.isQuizStarted)

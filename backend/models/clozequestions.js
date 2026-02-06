@@ -12,8 +12,13 @@ const clozequestionSchema = new Schema({
 const ClozeQuestionSetSchema = new Schema({
     quizLevel:{type:String, required:true},
     levelName:{type:String, required:false},
-    questions:[clozequestionSchema]
-})
+    questions:[clozequestionSchema],
+    year:{type:mongoose.Schema.Types.Date, default:new Date().getFullYear()}
+},
+{
+    timestamps:true
+}
+)
 
 const ClozeQuestionSet = mongoose.model('ClozeQuestionSet', ClozeQuestionSetSchema)
 
