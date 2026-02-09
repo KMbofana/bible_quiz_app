@@ -17,22 +17,22 @@ const router = createRouter({
 
 // 🛡️ Route Protection (auth + roles)
 
-// router.beforeEach((to) => {
-//   if (!to.meta?.requiresAuth) return true
+router.beforeEach((to) => {
+  if (!to.meta?.requiresAuth) return true
 
-//   const authStore = useAuthStore()
+  const authStore = useAuthStore()
 
-//   if (!authStore.isAuthenticated) {
-//     localStorage.setItem('redirect_after_login', to.fullPath)
-//     return '/'
-//   }
+  if (!authStore.isAuthenticated) {
+    localStorage.setItem('redirect_after_login', to.fullPath)
+    return '/'
+  }
 
-//   if (to.meta.roles?.length && !to.meta.roles.includes(authStore.role)) {
-//     return '/unauthorized'
-//   }
+  if (to.meta.roles?.length && !to.meta.roles.includes(authStore.role)) {
+    return '/unauthorized'
+  }
 
-//   return true
-// })
+  return true
+})
 
 
 
