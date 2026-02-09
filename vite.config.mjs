@@ -14,6 +14,8 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/',
+  appType: 'spa',
   plugins: [
     VueRouter({
         routesFolder: 'src/pages',     // 👈 tells it where to look for pages
