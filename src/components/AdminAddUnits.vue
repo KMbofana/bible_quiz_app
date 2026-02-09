@@ -447,7 +447,7 @@
 import { ref } from "vue";
 import axios from "axios";
 import {prod} from "../../api";
-import { useToast } from "vue-toastification";
+// import { useToast } from "vue-toastification";
 import { shallowRef } from 'vue';
 import {useAuthStore} from "../stores/auth"
 
@@ -455,7 +455,7 @@ const open = shallowRef(true)
 const authStore = useAuthStore();
 const role = computed(() => authStore.userRole)
 
-const toast = useToast();
+// const toast = useToast();
 const loading = ref(false)
 
 
@@ -650,6 +650,12 @@ const resetFormFields = () => {
 
     const save = async () => {
       try {
+
+        const { useToast } = await import('vue-toastification')
+        await import('vue-toastification/dist/index.css')
+
+        const toast = useToast()
+
           loading.value = true
        const data = {
             name:divisionName.value ||

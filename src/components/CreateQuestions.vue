@@ -215,7 +215,7 @@
 <script setup>
 import { ref } from 'vue';
 import { prod } from '../../api';
-import { useToast } from 'vue-toastification';
+// import { useToast } from 'vue-toastification';
 import axios from "axios"
 
 const question = ref('')
@@ -323,8 +323,14 @@ if (question.type === 'mc') {
 
 const openPreview = ref(false)
 
+// const toast = useToast()
+const saveQuestion = async ()=>{
+
+  const { useToast } = await import('vue-toastification')
+await import('vue-toastification/dist/index.css')
+
 const toast = useToast()
-const saveQuestion = ()=>{
+
     isSaveQuestions.value=true
     
       if(type.value === 'mc'){
@@ -367,6 +373,10 @@ const resetInputs = () => {
 }
 
 const submitAllQuestions = async () => {
+  const { useToast } = await import('vue-toastification')
+await import('vue-toastification/dist/index.css')
+
+const toast = useToast()
     loading.value=true
     const data = {
         quizLevel:quizLevel.value,

@@ -112,12 +112,12 @@
 <script setup>
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
-import { useToast } from "vue-toastification";
+// import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
 import { prod } from '../../api';
 
 
-const toast = useToast()
+// const toast = useToast()
 const route = useRouter()
 
 const firstname = ref('')
@@ -142,6 +142,10 @@ onMounted(()=>{
 })
 
     const register = async () => {
+        const { useToast } = await import('vue-toastification')
+await import('vue-toastification/dist/index.css')
+
+const toast = useToast()
         error.value = ''
         loading.value = true
         const data = {

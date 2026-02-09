@@ -131,13 +131,13 @@ import { useQuizStore } from '../stores/quizLevel'
 import axios from 'axios'
 import { prod } from '../../api';
 import {useAuthStore} from "../stores/auth"
-import { useToast } from 'vue-toastification';
+// import { useToast } from 'vue-toastification';
 import {useQuizTimer} from '../stores/quiztimer'
 
 const quizStore = useQuizStore()
 const questions = ref([])
 const authStore = useAuthStore()
-const toast = useToast()
+// const toast = useToast()
 const quiztimer = useQuizTimer()
 const quizStarted = ref(false)
 
@@ -145,6 +145,10 @@ const quizStarted = ref(false)
 onMounted(async () => {
 console.log(quizStore.quizLevel,
         authStore.userDistrict)
+        const { useToast } = await import('vue-toastification')
+await import('vue-toastification/dist/index.css')
+
+const toast = useToast()
   try {
     const result = await axios.get(`${prod}questions/student_view_cloze_questions`, {
       params: {

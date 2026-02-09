@@ -7,6 +7,7 @@ import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // Utilities
 import { defineConfig } from 'vite'
@@ -17,6 +18,11 @@ export default defineConfig({
   base: '/',
   appType: 'spa',
   plugins: [
+    visualizer({
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+    }),
     VueRouter({
         routesFolder: 'src/pages',     // 👈 tells it where to look for pages
         dts: 'src/typed-router.d.ts',  // optional, generates TS types
@@ -93,4 +99,19 @@ export default defineConfig({
       },
     },
   },
+  build:{
+    chunkSizeWarningLimit: 600,
+  rollupOptions: {
+    output: {
+      manualChunks(id) {
+        if (id.includes('node_modules')) {
+          if (id.includes('vuetify')) return 'vuetify'
+          if (id.includes('vue')) return 'vue'
+          if (id.includes('axios')) return 'axios'
+          return 'vendor'
+        }
+      },
+    },
+  },
+  }
 })

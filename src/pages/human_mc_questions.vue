@@ -98,7 +98,7 @@ import QuizResults from '../components/QuizResults.vue'
 import { useQuizStore } from '../stores/quizLevel'
 import axios from 'axios'
 import { prod } from '../../api';
-import { useToast } from 'vue-toastification'
+// import { useToast } from 'vue-toastification'
 import {useQuizTimer} from '../stores/quiztimer'
 
 import {useAuthStore} from "../stores/auth"
@@ -107,13 +107,16 @@ import { useQuestionsStore } from '../stores/questions'
 const quizStore = useQuizStore()
 const data = ref([])
 
-const toast = useToast()
+// const toast = useToast()
 const authStore = useAuthStore()
 const quiztimer = useQuizTimer()
 const questionStore = useQuestionsStore()
 
 onMounted(async () => {
+  const { useToast } = await import('vue-toastification')
+await import('vue-toastification/dist/index.css')
 
+const toast = useToast()
   try {
      questionStore.resetQuestionID()
     const result = await axios.get(`${prod}questions/student_view_mc_questions`, {

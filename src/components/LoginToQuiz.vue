@@ -46,24 +46,28 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import { useToast } from 'vue-toastification'
+// import { useToast } from 'vue-toastification'
 import { useRouter } from 'vue-router'
 import { jwtDecode } from "jwt-decode";
 import { prod } from '../../api';
 import { useAuthStore } from '../stores/auth';
 
-const authStore = useAuthStore()
-
-
+    const authStore = useAuthStore()
     const email = ref('')
     const password = ref('')
     const error = ref('')
     const loading = ref(false)
 
-    const toast = useToast();
+    // const toast = useToast();
     const route = useRouter()
 
     const login = async () => {
+
+        const { useToast } = await import('vue-toastification')
+        await import('vue-toastification/dist/index.css')
+
+        const toast = useToast()
+
         loading.value = true
         error.value = ''
        console.log(loading.value)
@@ -113,6 +117,12 @@ const authStore = useAuthStore()
 
     const registraLogin = async() =>{
        try {
+
+         const { useToast } = await import('vue-toastification')
+        await import('vue-toastification/dist/index.css')
+
+        const toast = useToast()
+
            const data = {
             email:email.value,
             password:password.value

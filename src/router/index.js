@@ -18,27 +18,35 @@ const router = createRouter({
 })
 
 // 🛡️ Route Protection (auth + roles)
-router.beforeEach((to) => {
-  console.log('Meta:', to.meta)
-  const authStore = useAuthStore(pinia)
-
+router.beforeEach(async (to) => {
   const requiresAuth = to.meta?.requiresAuth
   const allowedRoles = to.meta?.roles || []
-  console.log('allowedRoles:',allowedRoles)
-  console.log('requiresAuth ?:',requiresAuth)
+
+  if (!requiresAuth) return true
+
+  // lazy-load pinia + auth store
+  const [{ default: pinia }, { useAuthStore }] = await Promise.all([
+    import('../stores'),
+    import('../stores/auth'),
+  ])
+
+  const authStore = useAuthStore(pinia)
+
   const isAuthenticated = authStore.isAuthenticated
   const userRole = authStore.role
 
-  if (requiresAuth && !isAuthenticated) {
-    // store the target route if you want to redirect after login
+  if (!isAuthenticated) {
     localStorage.setItem('redirect_after_login', to.fullPath)
     return { path: '/' }
   }
 
-  if (requiresAuth && allowedRoles.length && !allowedRoles.includes(userRole)) {
+  if (allowedRoles.length && !allowedRoles.includes(userRole)) {
     return { path: '/unauthorized' }
   }
+
+  return true
 })
+
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
 router.onError((err, to) => {

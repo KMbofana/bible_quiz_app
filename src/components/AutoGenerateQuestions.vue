@@ -159,7 +159,7 @@
 import {ref} from "vue"
 import axios from "axios"
 import { prod } from '../../api';
-import { useToast } from 'vue-toastification';
+// import { useToast } from 'vue-toastification';
 import { useQuizStore } from '../stores/quizLevel'
 import {useAuthStore} from "../stores/auth"
 import { useQuestionsStore } from '../stores/questions'
@@ -171,7 +171,7 @@ const DataQuestions = ref([])
 const authStore = useAuthStore()
 const questionStore = useQuestionsStore()
 
-const toast = useToast()
+// const toast = useToast()
 
 const quizLevel = ref('')
 const bookNames = ref('')
@@ -218,6 +218,12 @@ const regenerateQustions = ()=>{
 
 const alphabetLabel = (index) => String.fromCharCode(65 + index)
 const generateQuestions = async () =>{
+
+      const { useToast } = await import('vue-toastification')
+      await import('vue-toastification/dist/index.css')
+
+      const toast = useToast()
+
     isGenerating.value= true
     const data = {
         level:quizLevel.value,
