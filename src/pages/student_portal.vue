@@ -51,7 +51,7 @@
 </route>
 
 <script setup>
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import {useQuizStore} from "../stores/quizLevel"
 import {useAuthStore} from "../stores/auth"
 

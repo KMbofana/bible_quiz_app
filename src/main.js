@@ -5,9 +5,7 @@
  */
 
 // Plugins
-import { registerCore } from '@/plugins/core'
-import { registerOptional } from '@/plugins/optional'
-
+import { registerPlugins } from '@/plugins'
 
 // Components
 import App from './App.vue'
@@ -21,11 +19,9 @@ import 'unfonts.css'
 
 const app = createApp(App)
 
-registerCore(app)
+
+registerPlugins(app)
+
 app.mount('#app')
 
-// load heavy stuff AFTER first paint
-registerOptional(app)
-
-
-
+main.js

@@ -62,58 +62,56 @@ import { useAuthStore } from '../stores/auth';
     const route = useRouter()
 
     const login = async () => {
+  // Set loading
+  loading.value = true
+  error.value = ''
 
-        const { useToast } = await import('vue-toastification')
-        await import('vue-toastification/dist/index.css')
-
-        const toast = useToast()
-
-        loading.value = true
-        error.value = ''
-       console.log(loading.value)
-        const isRegistrar = await registraLogin();
-        console.log(isRegistrar)
-        if(isRegistrar){
-            route.push('/registrar_create_accounts')
-        }else{
-            console.log('checking other user types')
-            const data = {
-                email:email.value,
-                password:password.value
-            }
-
-        try {
-         await axios.post(`${prod}login`,data )
-          .then((result) => {
-            console.log(result)
-            toast.success(result.data.message, {
-                timeout:5000
-            })
-            const decoded = jwtDecode(result.data.token)
-                console.log(decoded.role)
-                if(decoded.role ==="user"){
-                  authStore.userLogin(decoded.role, decoded.district,result.data.token, decoded.email)
-                //   console.log(decoded.district)
-                    route.push('/student_portal')
-                }else{
-                  authStore.userLogin(decoded.role,decoded.district, result.data.token, decoded.email)
-                    route.push('/create_questions')
-                }
-            
-          }).catch((err) => {
-            console.log(error)
-            loading.value=false
-            error.value = err.response.data.message
-            toast.error(err.response.data.message, {
-                timeout:3000
-            })
-          });
-        } catch (err) {
-            error.value = "wrong username or password"
-            loading.value = false
-        } 
-        }
+  try {
+    // Check if registrar
+    const isRegistrar = await registraLogin()
+    if (isRegistrar) {
+      route.push('/registrar_create_accounts')
+      return
     }
+
+    // Lazy load toast only when needed
+    const toastModule = await import('vue-toastification')
+    await import('vue-toastification/dist/index.css')
+    const toast = toastModule.useToast()
+
+    const data = { email: email.value, password: password.value }
+
+    const result = await axios.post(`${prod}login`, data)
+    
+    // Show success toast
+    toast.success(result.data.message, { timeout: 5000 })
+
+    const decoded = jwtDecode(result.data.token)
+    authStore.userLogin(
+      decoded.role,
+      decoded.district,
+      result.data.token,
+      decoded.email
+    )
+
+    if (decoded.role === 'user') {
+      route.push('/student_portal')
+    } else {
+      route.push('/create_questions')
+    }
+
+  } catch (err) {
+    // Show error toast
+    const toastModule = await import('vue-toastification')
+    const toast = toastModule.useToast()
+    const msg = err.response?.data?.message || 'Wrong username or password'
+    error.value = msg
+    toast.error(msg, { timeout: 3000 })
+  } finally {
+    loading.value = false
+  }
+}
+
 
     const registraLogin = async() =>{
        try {

@@ -8,8 +8,6 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
-
-import pinia from '../stores'
 import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
@@ -18,34 +16,24 @@ const router = createRouter({
 })
 
 // 🛡️ Route Protection (auth + roles)
-router.beforeEach(async (to) => {
-  const requiresAuth = to.meta?.requiresAuth
-  const allowedRoles = to.meta?.roles || []
 
-  if (!requiresAuth) return true
+// router.beforeEach((to) => {
+//   if (!to.meta?.requiresAuth) return true
 
-  // lazy-load pinia + auth store
-  const [{ default: pinia }, { useAuthStore }] = await Promise.all([
-    import('../stores'),
-    import('../stores/auth'),
-  ])
+//   const authStore = useAuthStore()
 
-  const authStore = useAuthStore(pinia)
+//   if (!authStore.isAuthenticated) {
+//     localStorage.setItem('redirect_after_login', to.fullPath)
+//     return '/'
+//   }
 
-  const isAuthenticated = authStore.isAuthenticated
-  const userRole = authStore.role
+//   if (to.meta.roles?.length && !to.meta.roles.includes(authStore.role)) {
+//     return '/unauthorized'
+//   }
 
-  if (!isAuthenticated) {
-    localStorage.setItem('redirect_after_login', to.fullPath)
-    return { path: '/' }
-  }
+//   return true
+// })
 
-  if (allowedRoles.length && !allowedRoles.includes(userRole)) {
-    return { path: '/unauthorized' }
-  }
-
-  return true
-})
 
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
